@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import useAuth from '@/hooks/use-auth';
 import { toast } from '@/hooks/use-toast';
 import { cn, fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
@@ -27,8 +26,11 @@ const START_HOUR = 8;
 const BREAK_HOUR = 12;
 const END_HOUR = 20;
 
-export default function CreateReservation() {
-  const user = useAuth();
+type CreateReservationProps = {
+  user: UserType;
+};
+
+export default function CreateReservation({ user }: CreateReservationProps) {
   const [date, setDate] = useState<Date>(new Date());
   const [dateRanges, setDateRanges] = useState<number[] | undefined>();
   const [selectedRange, setSelectedRange] = useState<number | undefined>();
@@ -43,18 +45,10 @@ export default function CreateReservation() {
       endDate.setHours(selectedRange + 1, 0, 0, 0);
       const isDateValid = startDate > new Date();
 
-      if (isDateValid && user && user.uid) {
-        const author: UserType = {
-          id: user.uid,
-          name: user.displayName!,
-          email: user.email!,
-          role: 'user',
-          image: user.photoURL!,
-        };
-
+      if (isDateValid && user && user.id) {
         try {
           await ReservationServiceIns.createOne({
-            user: author,
+            user,
             status: 'TO_VALIDATE',
             startDate,
             endDate,
@@ -118,10 +112,12 @@ export default function CreateReservation() {
       .catch(console.error);
   }, [date]);
 
+  if (user.role === 'admin') return;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Reserve a course</Button>
+        <Button>Reserve a course</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

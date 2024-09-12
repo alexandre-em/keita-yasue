@@ -30,7 +30,7 @@ type ReservationType = {
   startDate: Date;
   endDate: Date;
   user: User;
-  review?: ReviewType;
+  review?: string;
   status: StatusType;
   createdAt: Date;
   updatedAt?: Date;
@@ -38,13 +38,6 @@ type ReservationType = {
 };
 
 type StatusType = 'TO_VALIDATE' | 'TO_CANCEL' | 'VALIDATED' | 'CANCELLED' | 'DONE';
-
-type ReviewType = {
-  id?: string;
-  comment: string;
-  createdAt: Date;
-  updatedAt?: Date;
-};
 
 type EntityType = ConversationType | MessageType | UserType | ReservationType | ReviewType | StatusType;
 type EntityTypes = 'conversations' | 'messages' | 'users' | 'reservations' | 'reviews' | 'statuts';
