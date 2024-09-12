@@ -1,11 +1,11 @@
 type ConversationType = {
-  id: string;
+  id?: string;
   members: UserType[];
   messages: MessageType[];
 };
 
 type MessageType = {
-  id: string;
+  id?: string;
   author: UserType;
   date: Date | FirebaseDateType;
   content: string;
@@ -15,36 +15,36 @@ type UserType = {
   id: string;
   name: string;
   email: string;
-  emailVerifiedAt: Date;
+  emailVerifiedAt?: Date;
   password?: string;
-  level: number;
+  level?: number;
   image: string;
-  reservation: ReservationType[];
-  createdAt: Date;
+  // reservation: ReservationType[];
+  role: 'admin' | 'user';
+  createdAt?: Date;
   deletedAt?: Date;
 };
 
 type ReservationType = {
-  id: string;
+  id?: string;
   startDate: Date;
   endDate: Date;
   user: User;
-  review: ReviewType;
+  review?: ReviewType;
   status: StatusType;
   createdAt: Date;
   updatedAt?: Date;
+  deletedAt?: Date;
 };
 
+type StatusType = 'TO_VALIDATE' | 'TO_CANCEL' | 'VALIDATED' | 'CANCELLED' | 'DONE';
+
 type ReviewType = {
-  id: string;
+  id?: string;
   comment: string;
   createdAt: Date;
   updatedAt?: Date;
 };
 
-type StatusType = {
-  id: string;
-  status: 'TO_VALIDATE' | 'TO_CANCEL' | 'VALIDATED' | 'CANCELLED';
-  createdAt: Date;
-  updatedAt?: Date;
-};
+type EntityType = ConversationType | MessageType | UserType | ReservationType | ReviewType | StatusType;
+type EntityTypes = 'conversations' | 'messages' | 'users' | 'reservations' | 'reviews' | 'statuts';

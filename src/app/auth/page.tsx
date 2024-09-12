@@ -1,30 +1,45 @@
 'use client';
 import { UserCredential } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 
 import { createSession } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import googleAuthInstance from '@/lib/auth';
+import { UserServiceIns } from '@/services';
 
 export default function AdminPage() {
-  const router = useRouter();
-
   const handleSignIn = useCallback(async () => {
     try {
       const user: UserCredential = await googleAuthInstance.signIn();
 
       toast({
-        description: 'Welcome back !',
-        title: `Successfuly authenticated`,
+        title: 'Welcome back !',
+        description: `Redirecting to dashboard in few seconds...`,
         variant: 'success',
       });
 
-      router.push('/dashboard');
+      let result = (await UserServiceIns.getById(user.user.uid)).result;
 
-      await createSession(user.user.uid);
+      if (!result?.exists()) {
+        await UserServiceIns.createOne(user.user.uid, {
+          name: user.user.displayName!,
+          email: user.user.email!,
+          image: user.user.photoURL!,
+          level: 0,
+          createdAt: new Date(),
+          id: user.user.uid,
+          role: 'user',
+          emailVerifiedAt: new Date(),
+        });
+
+        result = (await UserServiceIns.getById(user.user.uid)).result;
+      }
+
+      const stringDetails = JSON.stringify(result?.data());
+
+      await createSession(user.user.uid, stringDetails);
     } catch (error) {
       toast({
         title: 'An error occurred while signing in',
@@ -32,7 +47,7 @@ export default function AdminPage() {
         variant: 'destructive',
       });
     }
-  }, [router]);
+  }, []);
 
   return (
     <main className="min-h-[calc(100dvh-57px)] flex justify-center items-center">

@@ -13,3 +13,13 @@ type FirebaseDateType = {
   seconds: number;
   nanoseconds: number;
 };
+
+type FirebasePaginationOptionsType = {
+  lim?: number;
+  cursor?: {
+    after?: string;
+    before?: string;
+  };
+  orderByQuery?: { value: string; order: 'asc' | 'desc' };
+  status?: StatusType;
+};

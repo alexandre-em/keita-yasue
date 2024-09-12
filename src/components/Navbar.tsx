@@ -48,7 +48,6 @@ function NavbarMenu({
       toast({
         title: 'See you soon !',
         description: 'You have been successfully logged out',
-        variant: 'success',
       });
 
       if (onClick) onClick();
