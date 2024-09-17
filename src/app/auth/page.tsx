@@ -1,6 +1,6 @@
 'use client';
 import { UserCredential } from 'firebase/auth';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { createSession } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,10 @@ import googleAuthInstance from '@/lib/auth';
 import { UserServiceIns } from '@/services';
 
 export default function AdminPage() {
+  const [loading, setLoading] = useState(false);
+
   const handleSignIn = useCallback(async () => {
+    setLoading(true);
     try {
       const user: UserCredential = await googleAuthInstance.signIn();
 
@@ -46,6 +49,8 @@ export default function AdminPage() {
         description: `${error}`,
         variant: 'destructive',
       });
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -57,7 +62,9 @@ export default function AdminPage() {
           <CardDescription>You are trying to access to a protected route. Please authenticate.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button onClick={handleSignIn}>Sign in with Google</Button>
+          <Button onClick={handleSignIn} disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign in with Google'}
+          </Button>
         </CardContent>
       </Card>
     </main>

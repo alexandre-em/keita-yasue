@@ -61,7 +61,7 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="mr-5">Update review</Button>
+        <Button className="mr-5 my-1">Update review</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

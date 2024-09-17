@@ -39,11 +39,7 @@ function NavbarMenu({
 
   const handleSignOut = useCallback(async () => {
     try {
-      console.log('Signing out');
-
       await googleAuthInstance.signOut();
-
-      console.log('Success signed out');
 
       toast({
         title: 'See you soon !',

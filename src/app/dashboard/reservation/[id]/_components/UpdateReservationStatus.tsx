@@ -60,7 +60,7 @@ export default function UpdateReservationStatus({ id }: UpdateReservationStatusP
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="mr-5">Update status</Button>
+        <Button className="mr-5 my-1">Update status</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

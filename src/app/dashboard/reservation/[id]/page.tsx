@@ -1,4 +1,4 @@
-import { ChevronRight, Loader, MessageSquare } from 'lucide-react';
+import { ChevronRight, Loader } from 'lucide-react';
 import React from 'react';
 
 import {
@@ -11,14 +11,15 @@ import {
 } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { getUserDetail, levelName, statusCancellationLevel, statusColor, statusValidationLevel } from '@/constants';
+import { admin } from '@/constants/admin';
 import { fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
 
 import UpdateReservationReview from './_components/UpdateReservationReview';
 import UpdateReservationStatus from './_components/UpdateReservationStatus';
+import ChatDestButton from '../../_components/chat/ChatDestButton';
 
 export default async function ReservationId({ params: { id } }: IdParamsType) {
   const user = getUserDetail();
@@ -68,10 +69,9 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
             </TypographyMuted>
           </div>
         </div>
-        <Button variant="outline">
-          <MessageSquare className="mr-2" />
-          Chat
-        </Button>
+        {(user.role !== 'admin' || user.id !== reservation.user.id) && (
+          <ChatDestButton user={user} dest={user.role === 'admin' ? reservation.user : admin} />
+        )}
       </div>
 
       {/* Reservation detail */}

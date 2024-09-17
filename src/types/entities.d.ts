@@ -1,7 +1,9 @@
 type ConversationType = {
   id?: string;
-  members: UserType[];
+  members: UserType[] | string[];
   messages: MessageType[];
+  createdAt: Date;
+  lastMessage: Date;
 };
 
 type MessageType = {
@@ -9,6 +11,7 @@ type MessageType = {
   author: UserType;
   date: Date | FirebaseDateType;
   content: string;
+  viewed?: Date;
 };
 
 type UserType = {
@@ -29,7 +32,7 @@ type ReservationType = {
   id?: string;
   startDate: Date;
   endDate: Date;
-  user: User;
+  user: UserType;
   review?: string;
   status: StatusType;
   createdAt: Date;

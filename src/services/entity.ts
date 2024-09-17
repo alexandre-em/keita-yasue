@@ -1,4 +1,6 @@
 import {
+  DocumentData,
+  DocumentSnapshot,
   QueryConstraint,
   collection as collectionRef,
   deleteDoc,
@@ -20,6 +22,13 @@ import {
 import { app } from '@/lib/firebase';
 
 const db = getFirestore(app);
+
+export type FirebaseResponseType = {
+  result: DocumentSnapshot<DocumentData, DocumentData>;
+  error: unknown;
+  id?: string;
+  totalDoc?: number;
+};
 
 export class EntityService<T> {
   protected collection: EntityTypes;
@@ -117,7 +126,7 @@ export class EntityService<T> {
       error = e;
     }
 
-    return { id, result, error };
+    return { id, result: data, error };
   }
 
   async updateOne(id: string, data: Partial<T>) {
