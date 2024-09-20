@@ -75,6 +75,7 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
               placeholder="Type your review here."
               value={newReview}
               onChange={(e) => setNewReview(e.target.value)}
+              rows={20}
             />
           </DialogDescription>
         </div>

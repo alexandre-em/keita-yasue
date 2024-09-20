@@ -53,6 +53,7 @@ export default function FilterPagination({ searchParams: { limit, after, before,
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Status</SelectLabel>
+            <SelectItem value=" ">NONE</SelectItem>
             <SelectItem value="TO_VALIDATE">TO_VALIDATE</SelectItem>
             <SelectItem value="TO_CANCEL">TO_CANCEL</SelectItem>
             <SelectItem value="VALIDATED">VALIDATED</SelectItem>

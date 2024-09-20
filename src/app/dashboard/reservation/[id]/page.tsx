@@ -50,7 +50,7 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
   if (error || reservation === null) return <TypographyLarge>An error occurred. Please try again later.</TypographyLarge>;
 
   return (
-    <div>
+    <div className="m-5 mt-0">
       <TypographyH1>Reservation</TypographyH1>
       <TypographyMuted>#{id}</TypographyMuted>
 
@@ -82,7 +82,7 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
             {statusArray.map((s, i) => (
               <div key={s} className="flex">
                 <Badge
-                  variant={i !== statusLevelIndex ? 'outline' : statusColor[reservation.status]}
+                  variant={i > statusLevelIndex ? 'outline' : statusColor[s]}
                   className={i < statusLevelIndex ? 'opacity-40' : ''}
                 >
                   {s}
@@ -112,7 +112,9 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
           <CardFooter>
             <div className="flex flex-wrap">
               <UpdateReservationStatus id={id} />
-              {user.role === 'admin' && <UpdateReservationReview id={id} review={reservation.review} />}
+              {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
+                <UpdateReservationReview id={id} review={reservation.review} />
+              )}
             </div>
           </CardFooter>
         )}

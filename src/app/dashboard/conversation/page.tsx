@@ -8,7 +8,7 @@ export default function ConversationPage() {
   const user = getUserDetail();
 
   return (
-    <div>
+    <div className="m-5 mt-0">
       <Chat user={user} />
     </div>
   );

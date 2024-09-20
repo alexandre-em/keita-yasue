@@ -50,7 +50,7 @@ export default function ChatDestButton({ dest, user }: ChatDestDialogProps) {
     return (
       <Button variant="outline" onClick={handleClick} disabled>
         <Loader className="mr-2" />
-        Loading...
+        Openning chat...
       </Button>
     );
 

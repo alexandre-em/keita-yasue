@@ -23,3 +23,9 @@ type FirebasePaginationOptionsType = {
   orderByQuery?: { value: string; order: 'asc' | 'desc' };
   status?: StatusType;
 };
+
+type SvgProps = {
+  color?: string;
+  width?: number;
+  height?: number;
+};

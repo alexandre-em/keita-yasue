@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,9 +22,9 @@ const navBarMessages = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={cn(inter.className, 'bg-[#fffcf7]')}>
         <Navbar messages={navBarMessages} />
-        <main className="min-h-[calc(100dvh-97px)] flex flex-col m-5">{children}</main>
+        <main className="min-h-[calc(100dvh-97px)] flex flex-col mt-[calc(1.25rem+36px)]">{children}</main>
         <Toaster />
       </body>
     </html>

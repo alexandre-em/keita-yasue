@@ -13,7 +13,7 @@ export default function DashboardPage({
   const user = getUserDetail();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col m-5 mt-0">
       <div className="flex flex-wrap justify-between">
         <TypographyH1>Dashboard</TypographyH1>
         <CreateReservation user={user} />

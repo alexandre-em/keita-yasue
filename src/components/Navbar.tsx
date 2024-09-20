@@ -4,14 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useCallback, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import useAuth from '@/hooks/use-auth';
 import { toast } from '@/hooks/use-toast';
@@ -62,12 +56,18 @@ function NavbarMenu({
   return (
     <NavigationMenuList className={className}>
       <NavigationMenuItem className="m-1 w-full cursor-pointer">
-        <NavigationMenuLink onClick={() => handleRedirect('/about')} className={cn(navigationMenuTriggerStyle(), 'w-full')}>
+        <NavigationMenuLink
+          onClick={() => handleRedirect('/#about')}
+          className={cn(buttonVariants({ variant: 'ghost' }), 'w-full')}
+        >
           {messages?.about || 'About'}
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem className="m-1 w-full cursor-pointer">
-        <NavigationMenuLink onClick={() => handleRedirect('/about')} className={cn(navigationMenuTriggerStyle(), 'w-full')}>
+        <NavigationMenuLink
+          onClick={() => handleRedirect('/#contact')}
+          className={cn(buttonVariants({ variant: 'ghost' }), 'w-full')}
+        >
           {messages?.contact || 'Contact'}
         </NavigationMenuLink>
       </NavigationMenuItem>
@@ -87,8 +87,8 @@ export default function Navbar({ messages }: { messages: Record<string, string> 
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-full">
-      <NavigationMenu className="p-2 min-w-full h-[56px] bg-background justify-between">
+    <div className="w-full fixed top-0 z-50">
+      <NavigationMenu className="p-2 min-w-full h-[56px] justify-between">
         {/*Left*/}
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
