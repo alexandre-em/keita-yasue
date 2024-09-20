@@ -19,11 +19,12 @@ export default function AdminPage() {
 
       toast({
         title: 'Welcome back !',
-        description: `Redirecting to dashboard in few seconds...`,
+        description: `Redirecting on the dashboard in few seconds...`,
         variant: 'success',
       });
-
-      let result = (await UserServiceIns.getById(user.user.uid)).result;
+      // eslint-disable-next-line
+      const userResult = await UserServiceIns.getById(user.user.uid);
+      let result = userResult.result;
 
       if (!result?.exists()) {
         await UserServiceIns.createOne(user.user.uid, {
@@ -36,7 +37,7 @@ export default function AdminPage() {
           role: 'user',
           emailVerifiedAt: new Date(),
         });
-
+        // eslint-disable-next-line
         result = (await UserServiceIns.getById(user.user.uid)).result;
       }
 

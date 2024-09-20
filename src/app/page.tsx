@@ -1,6 +1,6 @@
 import { Award, Book, Briefcase, Paperclip } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { CircledArrow, Professor, Underline } from '@/components/svg';
 import { TypographyH1, TypographyH2, TypographyH3, TypographyLead, TypographyMuted } from '@/components/typography';
@@ -26,8 +26,8 @@ const JapaneseTeacherLanding = () => {
         <section id="about" className="mb-16">
           <TypographyH2>Welcome to My Japanese Learning World!</TypographyH2>
           <TypographyMuted>
-            こんにちは (Konnichiwa)! I'm Keita Yasue, a passionate Japanese language teacher. Whether you're a beginner or looking
-            to polish your skills, I'm here to guide you on your Japanese language journey.
+            こんにちは (Konnichiwa)! I&apos;m Keita Yasue, a passionate Japanese language teacher. Whether you&apos;re a beginner
+            or looking to polish your skills, I&apos;m here to guide you on your Japanese language journey.
           </TypographyMuted>
         </section>
 
@@ -85,7 +85,13 @@ const JapaneseTeacherLanding = () => {
   );
 };
 
-const ServiceCard = ({ icon, title, description }) => (
+type ServiceCardProps = {
+  icon: ReactNode;
+  title: string;
+  description: string;
+};
+
+const ServiceCard = ({ icon, title, description }: ServiceCardProps) => (
   <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
     <div className="text-[#fffcf7] bg-[#e7740a] w-fit p-3 rounded-full">{icon}</div>
     <TypographyH3>{title}</TypographyH3>

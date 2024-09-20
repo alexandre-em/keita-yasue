@@ -23,6 +23,7 @@ import ChatDestButton from '../../_components/chat/ChatDestButton';
 
 export default async function ReservationId({ params: { id } }: IdParamsType) {
   const user = getUserDetail();
+  // eslint-disable-next-line
   const { result, error } = await ReservationServiceIns.getById(id);
 
   const reservation = result?.data()
@@ -82,7 +83,7 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
             {statusArray.map((s, i) => (
               <div key={s} className="flex">
                 <Badge
-                  variant={i > statusLevelIndex ? 'outline' : statusColor[s]}
+                  variant={i > statusLevelIndex ? 'outline' : statusColor[s as StatusType]}
                   className={i < statusLevelIndex ? 'opacity-40' : ''}
                 >
                   {s}

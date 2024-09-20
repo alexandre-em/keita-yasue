@@ -69,6 +69,7 @@ export default function Chat({ user }: ChatProps) {
         })
         .finally(() => chat?.setLoading(false));
     }
+    // eslint-disable-next-line
   }, [user.id]);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function Chat({ user }: ChatProps) {
         chat.setSelected(conversations[0].id);
       }
     }
+    // eslint-disable-next-line
   }, [chat?.selected, conversations]);
 
   if (!chat || error) return <TypographyMuted>An error occurred...</TypographyMuted>;

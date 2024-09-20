@@ -20,7 +20,7 @@ interface ChatDisplayProps {
 }
 
 export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
-  const chatContainerRef = useRef<HTMLDivElement>();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const chat = useChat();
   const dest = conversation?.members.filter((member) => (member as UserType).id !== user.id)[0] as UserType;
   const [message, setMessage] = useState('');
@@ -141,7 +141,7 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
                   key={msg.id}
                   className={`w-full mb-3 flex flex-col ${msg.author.id === user.id ? 'items-end' : 'items-start'}`}
                 >
-                  <Badge variant={msg.author.id === user.id ? 'color' : 'default'} className="text-sm">
+                  <Badge variant={msg.author.id === user.id ? 'color' : 'secondary'} className="text-sm">
                     {msg.content}
                   </Badge>
                   <p className="italic text-xs text-muted-foreground opacity-50">

@@ -114,12 +114,11 @@ export class EntityService<T> {
   }
 
   async createOne(data: T) {
-    let result = null;
     let error = null;
     const id = crypto.randomUUID();
 
     try {
-      result = await setDoc(doc(db, this.collection, id), data as EntityType, {
+      await setDoc(doc(db, this.collection, id), data as EntityType, {
         merge: true,
       });
     } catch (e) {
