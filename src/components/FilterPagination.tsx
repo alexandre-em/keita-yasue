@@ -31,7 +31,7 @@ export default function FilterPagination({ searchParams: { limit, after, before,
   );
 
   return (
-    <div className="w-full flex flex-wrap items-center">
+    <div className="flex flex-wrap items-center">
       <TypographyH4>Filter : </TypographyH4>
       <Select onValueChange={(v: string) => handleRedirect('limit', v)} defaultValue={`${limit}`}>
         <SelectTrigger className="w-[180px] mx-2">

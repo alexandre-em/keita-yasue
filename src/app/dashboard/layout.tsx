@@ -9,10 +9,10 @@ import { ChatProvider } from './_components/chat/ChatProvider';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
-    <div className="relative w-full min-h-[calc(100dvh-76px)]">
+    <div className="relative w-full min-h-[calc(100dvh-76px)]" suppressHydrationWarning>
       <ChatProvider>
         {children}
-        <Link href="/dashboard/conversation" className={cn('fixed bottom-5 right-5', buttonVariants())}>
+        <Link href="/dashboard/conversation" className={cn(buttonVariants(), 'fixed bottom-5 right-5')}>
           <MessageCircle />
         </Link>
       </ChatProvider>

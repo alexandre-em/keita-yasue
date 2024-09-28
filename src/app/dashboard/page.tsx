@@ -14,13 +14,15 @@ export default function DashboardPage({
 
   return (
     <div className="flex flex-col m-5 mt-0">
-      <div className="flex flex-wrap justify-between">
-        <TypographyH1>Dashboard</TypographyH1>
+      <TypographyH1>Dashboard</TypographyH1>
+      <Separator className="my-2" />
+      <div className="flex flex-wrap justify-between items-center">
+        <div>
+          <TypographyH2>My reservation</TypographyH2>
+          <TypographyMuted>Click on a reservation for more detail</TypographyMuted>
+        </div>
         <CreateReservation user={user} />
       </div>
-      <Separator className="my-2" />
-      <TypographyH2>My reservation</TypographyH2>
-      <TypographyMuted>Click on a reservation for more detail</TypographyMuted>
       <ReservationList limit={parseInt(limit)} after={after} before={before} status={status} />
     </div>
   );

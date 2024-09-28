@@ -1,10 +1,14 @@
+import { CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import CursorPagination from '@/components/CursorPagination';
 import FilterPagination from '@/components/FilterPagination';
-import { TypographyLarge, TypographyMuted } from '@/components/typography';
+import { TypographyH3, TypographyLarge, TypographyMuted } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getUserDetail, statusColor } from '@/constants';
 import { fbTimeToDate } from '@/lib/utils';
@@ -47,7 +51,26 @@ export default async function ReservationList({ limit, after, before, status }: 
 
   return (
     <div className="mt-5">
-      <FilterPagination searchParams={{ limit, after, before, status }} />
+      <div className="flex flex-wrap justify-between">
+        <FilterPagination searchParams={{ limit, after, before, status }} />
+        <Popover>
+          <PopoverTrigger>
+            <Button>
+              <CalendarIcon />
+              Reservations
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <TypographyH3>Reservations</TypographyH3>
+            <Calendar
+              mode="multiple"
+              selected={reservations.map((res) => res.startDate).filter((date) => date >= new Date())}
+              disabled={reservations.map((res) => res.startDate).filter((date) => date < new Date())}
+              className="rounded-md border w-fit mt-2 bg-white"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
