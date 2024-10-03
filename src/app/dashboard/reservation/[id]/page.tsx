@@ -45,7 +45,7 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
   if (reservation === undefined)
     return (
       <div className="flex flex-wrap">
-        <Loader className="mr-2" />
+        <Loader className="mr-2 animate-spin" />
         <TypographyLarge>Loading...</TypographyLarge>;
       </div>
     );

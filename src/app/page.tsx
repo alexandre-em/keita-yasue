@@ -2,7 +2,9 @@ import { Award, Book, Briefcase, Paperclip } from 'lucide-react';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 
+import ContactForm from '@/components/ContactForm';
 import { CircledArrow, Professor, Underline } from '@/components/svg';
+import MailSvg from '@/components/svg/Mail';
 import { TypographyH1, TypographyH2, TypographyH3, TypographyLead, TypographyMuted } from '@/components/typography';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,7 +12,7 @@ import { cn } from '@/lib/utils';
 const JapaneseTeacherLanding = () => {
   return (
     <div className="relative">
-      <main className="container mx-auto px-4 py-8 m-5">
+      <main className="container mx-auto px-4 py-8 m-5 max-w-[1100px]">
         <section id="hero" className="text-center py-16">
           <TypographyH1>Keita Yasue</TypographyH1>
           <TypographyLead>Japanese Language Teacher</TypographyLead>
@@ -59,18 +61,22 @@ const JapaneseTeacherLanding = () => {
           <TypographyMuted>TODO</TypographyMuted>
         </section>
 
-        <section id="contact" className="text-center">
+        <section id="start" className="text-center">
           <TypographyH2>Get Started Today!</TypographyH2>
-          <TypographyMuted>
-            Ready to embark on your Japanese language adventure? Contact me for a free consultation or to schedule your first
-            lesson.
-          </TypographyMuted>
+          <TypographyMuted>Ready to embark on your Japanese language adventure?</TypographyMuted>
           <Link href="/dashboard" className={cn(buttonVariants(), 'rounded-full mt-5')}>
             Sign in
           </Link>
           <div className="flex justify-center mt-5">
             <CircledArrow color="#ff920f" />
           </div>
+        </section>
+
+        <section id="contact" className="mt-5 flex items-center justify-around w-full">
+          <div className="hidden lg:block">
+            <MailSvg width={400} height={400} />
+          </div>
+          <ContactForm />
         </section>
       </main>
 
@@ -93,7 +99,7 @@ type ServiceCardProps = {
 
 const ServiceCard = ({ icon, title, description }: ServiceCardProps) => (
   <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-    <div className="text-[#fffcf7] bg-[#e7740a] w-fit p-3 rounded-full">{icon}</div>
+    <div className="text-[#fffcf7] bg-primary-color w-fit p-3 rounded-full">{icon}</div>
     <TypographyH3>{title}</TypographyH3>
     <TypographyMuted>{description}</TypographyMuted>
   </div>

@@ -49,7 +49,7 @@ export default function ChatDestButton({ dest, user }: ChatDestDialogProps) {
   if (chat?.loading)
     return (
       <Button variant="outline" onClick={handleClick} disabled>
-        <Loader className="mr-2" />
+        <Loader className="mr-2 animate-spin" />
         Openning chat...
       </Button>
     );

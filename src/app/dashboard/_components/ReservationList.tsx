@@ -103,16 +103,17 @@ export default function ReservationList({ limit, after, before, status, user }: 
         <FilterPagination searchParams={{ limit, after, before, status }} />
         <Popover>
           <PopoverTrigger>
-            <Button>
+            <Button variant="outline" className="rounded-full">
               <CalendarIcon />
-              Reservations
             </Button>
           </PopoverTrigger>
           <PopoverContent>
             <TypographyH3>Reservations</TypographyH3>
             <Calendar
               mode="multiple"
-              selected={reservationResult.reservations.map((res) => res.startDate).filter((date) => date >= new Date())}
+              selected={reservationResult.reservations
+                .filter((res) => res.startDate >= new Date() && res.status !== 'CANCELLED')
+                .map((res) => res.startDate)}
               disabled={reservationResult.reservations.map((res) => res.startDate).filter((date) => date < new Date())}
               className="rounded-md border w-fit mt-2 bg-white"
             />

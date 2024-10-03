@@ -83,7 +83,7 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? (
               <div className="flex items-center">
-                <Loader className="mr-2" /> Submitting...
+                <Loader className="mr-2 animate-spin" /> Submitting...
               </div>
             ) : (
               'Submit'

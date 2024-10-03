@@ -1,7 +1,8 @@
 'use client';
 
+import { send } from '@emailjs/browser';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Loader } from 'lucide-react';
+import { BookOpenCheck, Calendar as CalendarIcon, Loader } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { TypographyMuted, TypographySmall } from '@/components/typography';
@@ -18,7 +19,10 @@ import {
 } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { admin } from '@/constants/admin';
+import { NEXT_PUBLIC_EMAILJS_RESERVATION_TEMPLATE_ID, NEXT_PUBLIC_EMAILJS_SERVICE_ID } from '@/constants/env';
 import { toast } from '@/hooks/use-toast';
+import '@/lib/email';
 import { cn, fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
 
@@ -35,6 +39,25 @@ export default function CreateReservation({ user }: CreateReservationProps) {
   const [dateRanges, setDateRanges] = useState<number[] | undefined>();
   const [selectedRange, setSelectedRange] = useState<number | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const sendConfirmationMail = useCallback(
+    async (date: string, time: string) => {
+      const newData = {
+        lesson_date: date,
+        lesson_time: time,
+        reply_to: admin.email,
+        to_email: user.email,
+        to_name: user.name,
+      };
+
+      const response = await send(NEXT_PUBLIC_EMAILJS_SERVICE_ID!, NEXT_PUBLIC_EMAILJS_RESERVATION_TEMPLATE_ID!, newData);
+
+      if (response.status === 200) {
+        return true;
+      } else throw new Error(response.text);
+    },
+    [user]
+  );
 
   const createReservation = useCallback(async () => {
     if (selectedRange) {
@@ -55,7 +78,10 @@ export default function CreateReservation({ user }: CreateReservationProps) {
             createdAt: new Date(),
           });
 
-          // TODO: Send a confirmation mail
+          // Send a confirmation mail
+          const dateLocale = startDate.toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+          const timeLocale = `${startDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric' })} to ${endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric' })}`;
+          sendConfirmationMail(dateLocale, timeLocale);
 
           toast({
             title: 'Success !',
@@ -65,7 +91,7 @@ export default function CreateReservation({ user }: CreateReservationProps) {
         } catch (e) {
           toast({
             title: 'An error occurred...',
-            description: 'Reservation creation failed. Please try again',
+            description: 'Please wait if reservation created or try again later',
             variant: 'destructive',
           });
         } finally {
@@ -87,9 +113,9 @@ export default function CreateReservation({ user }: CreateReservationProps) {
       .then((res) => {
         const docs = res.result?.docs;
 
-        const hours = docs?.map((doc) =>
-          fbTimeToDate((doc.data() as ReservationType).startDate as unknown as FirebaseDateType).getHours()
-        );
+        const hours = docs
+          ?.filter((doc) => (doc.data() as ReservationType).status !== 'CANCELLED')
+          .map((doc) => fbTimeToDate((doc.data() as ReservationType).startDate as unknown as FirebaseDateType).getHours());
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -117,7 +143,10 @@ export default function CreateReservation({ user }: CreateReservationProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Reserve a course</Button>
+        <Button>
+          <BookOpenCheck className="mr-2" />
+          Book a course
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -133,7 +162,7 @@ export default function CreateReservation({ user }: CreateReservationProps) {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={createReservation}>{loading ? <Loader /> : 'Reserve'}</Button>
+          <Button onClick={createReservation}>{loading ? <Loader className="animate-spin" /> : 'Reserve'}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -191,7 +220,7 @@ function DateRangeSelect({ onSelect, ranges }: DateRangeSelectProps) {
         {ranges ? (
           ranges.length < 1 && (
             <div className="flex flex-wrap items-center">
-              <Loader className="mr-2" /> <TypographySmall>Loading...</TypographySmall>
+              <Loader className="mr-2 animate-spin" /> <TypographySmall>Loading...</TypographySmall>
             </div>
           )
         ) : (

@@ -40,7 +40,7 @@ export class ReservationService extends EntityService<ReservationType> {
 
     const queryArgs: QueryConstraint[] = [];
 
-    queryArgs.push(where('status', '!=', 'CANCELLED'));
+    // queryArgs.push(where('status', '!=', 'CANCELLED'));
     queryArgs.push(where('startDate', '>=', dateTimeStamp));
     queryArgs.push(where('startDate', '<', nextDayTimestamp));
 
