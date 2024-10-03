@@ -1,5 +1,5 @@
 'use client';
-import { Loader } from 'lucide-react';
+import { Ban, Loader } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -12,25 +12,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
 import { ReservationServiceIns } from '@/services';
 
-type UpdateReservationStatusProps = {
+type CancelReservationDialogProps = {
   id: string;
+  status: StatusType;
 };
 
-export default function UpdateReservationStatus({ id }: UpdateReservationStatusProps) {
-  const [newStatus, setNewStatus] = useState<StatusType>();
+export default function CancelReservationDialog({ id, status }: CancelReservationDialogProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = useCallback(() => {
-    if (id && newStatus) {
+    if (id) {
       setLoading(true);
-      ReservationServiceIns.updateOne(id, {
-        status: newStatus,
-        updatedAt: new Date(),
-      })
+      // If admin already validated reservation, ask for cancellation
+      // Otherwise, it delete it definitively
+      const cancelPromise =
+        status === 'VALIDATED'
+          ? ReservationServiceIns.updateOne(id, {
+              status: 'TO_CANCEL',
+              updatedAt: new Date(),
+            })
+          : ReservationServiceIns.deleteOne(id);
+
+      cancelPromise
         .then((data) => {
           if (!data.error) {
             toast({
@@ -53,42 +59,33 @@ export default function UpdateReservationStatus({ id }: UpdateReservationStatusP
             variant: 'destructive',
           });
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [id, newStatus]);
+  }, [id, status]);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="mr-5 my-1">Update status</Button>
+        <Button className="my-1" variant="destructive">
+          <Ban className="mr-2" />
+          Cancel my reservation
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update status</DialogTitle>
+          <DialogTitle>Cancel my reservation</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          Status
-          <Select onValueChange={(v: string) => setNewStatus(v as StatusType)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="TO_VALIDATE">TO_VALIDATE</SelectItem>
-              <SelectItem value="TO_CANCEL">TO_CANCEL</SelectItem>
-              <SelectItem value="VALIDATED">VALIDATED</SelectItem>
-              <SelectItem value="CANCELLED">CANCELLED</SelectItem>
-              <SelectItem value="DONE">DONE</SelectItem>
-            </SelectContent>
-          </Select>
-        </DialogDescription>
+        <DialogDescription>Are you sure to cancel your reservation ?</DialogDescription>
         <DialogFooter>
-          <Button onClick={handleSubmit} disabled={loading}>
+          <Button onClick={handleSubmit} disabled={loading} variant="destructive">
             {loading ? (
               <div className="flex items-center">
                 <Loader className="mr-2 animate-spin" /> Submitting...
               </div>
             ) : (
-              'Submit'
+              'Cancel'
             )}
           </Button>
         </DialogFooter>

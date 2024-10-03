@@ -106,7 +106,7 @@ export default function CreateReservation({ user }: CreateReservationProps) {
       description: 'Please select a valid date',
       variant: 'destructive',
     });
-  }, [date, selectedRange, user]);
+  }, [date, selectedRange, user, sendConfirmationMail]);
 
   useEffect(() => {
     ReservationServiceIns.getUnAvailableHoursByDate(date)

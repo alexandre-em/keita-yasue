@@ -1,4 +1,5 @@
 import { ChevronRight, Loader } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import React from 'react';
 
 import {
@@ -18,6 +19,7 @@ import { getUserDetail } from '@/constants/cookies';
 import { fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
 
+import CancelReservationDialog from './_components/CancelReservationDialog';
 import UpdateReservationReview from './_components/UpdateReservationReview';
 import UpdateReservationStatus from './_components/UpdateReservationStatus';
 import ChatDestButton from '../../_components/chat/ChatDestButton';
@@ -49,7 +51,7 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
         <TypographyLarge>Loading...</TypographyLarge>;
       </div>
     );
-  if (error || reservation === null) return <TypographyLarge>An error occurred. Please try again later.</TypographyLarge>;
+  if (error || reservation === null) redirect('/error');
 
   return (
     <div className="m-5 mt-0">
@@ -110,16 +112,24 @@ export default async function ReservationId({ params: { id } }: IdParamsType) {
             <TypographyLead>{reservation.endDate.toLocaleString('en-us', { hour: 'numeric', minute: 'numeric' })}</TypographyLead>
           </div>
         </CardContent>
-        {user.role === 'admin' && (
-          <CardFooter>
-            <div className="flex flex-wrap">
-              <UpdateReservationStatus id={id} />
-              {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
-                <UpdateReservationReview id={id} review={reservation.review} />
-              )}
-            </div>
-          </CardFooter>
-        )}
+        <CardFooter>
+          <div className="flex flex-wrap">
+            {/* Cancel buttons for users */}
+            {user.role === 'user' && (reservation.status === 'TO_VALIDATE' || reservation.status === 'VALIDATED') && (
+              <CancelReservationDialog id={id} status={reservation.status} />
+            )}
+
+            {/* Updates buttons for admin */}
+            {user.role === 'admin' && (
+              <>
+                <UpdateReservationStatus id={id} />
+                {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
+                  <UpdateReservationReview id={id} review={reservation.review} />
+                )}
+              </>
+            )}
+          </div>
+        </CardFooter>
       </Card>
 
       {/* Reservation review */}
