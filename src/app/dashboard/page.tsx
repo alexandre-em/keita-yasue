@@ -2,7 +2,7 @@ import React from 'react';
 
 import { TypographyH1, TypographyH2, TypographyMuted } from '@/components/typography';
 import { Separator } from '@/components/ui/separator';
-import { getUserDetail } from '@/constants';
+import { getUserDetail } from '@/constants/cookies';
 
 import CreateReservation from './_components/CreateReservation';
 import ReservationList from './_components/ReservationList';
@@ -23,7 +23,7 @@ export default function DashboardPage({
         </div>
         <CreateReservation user={user} />
       </div>
-      <ReservationList limit={parseInt(limit)} after={after} before={before} status={status} />
+      <ReservationList user={user} limit={parseInt(limit)} after={after} before={before} status={status} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { SESSION_COOKIE_NAME, protectedRoutes } from './constants';
+import { protectedRoutes } from './constants';
+import { SESSION_COOKIE_NAME } from './constants/cookies';
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

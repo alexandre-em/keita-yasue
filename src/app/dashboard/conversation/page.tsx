@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getUserDetail } from '@/constants';
+import { getUserDetail } from '@/constants/cookies';
 
 import Chat from '../_components/chat/ChatDialog';
 

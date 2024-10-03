@@ -12,8 +12,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { getUserDetail, levelName, statusCancellationLevel, statusColor, statusValidationLevel } from '@/constants';
+import { levelName, statusCancellationLevel, statusColor, statusValidationLevel } from '@/constants';
 import { admin } from '@/constants/admin';
+import { getUserDetail } from '@/constants/cookies';
 import { fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
 

@@ -81,13 +81,25 @@ export default function Chat({ user }: ChatProps) {
     // eslint-disable-next-line
   }, [chat?.selected, conversations]);
 
-  if (!chat || error) return <TypographyMuted>An error occurred...</TypographyMuted>;
-  if (chat && chat.loading)
+  if (error)
     return (
-      <div className="flex justify-center items-center h-full">
-        <Loader className="mr-2" />
-        <TypographyMuted>Loading...</TypographyMuted>
-      </div>
+      <>
+        <TypographyH1>Conversations</TypographyH1>
+        <Separator className="my-2" />
+        <TypographyMuted>An error occurred...</TypographyMuted>;
+      </>
+    );
+
+  if (!chat || (chat && chat.loading))
+    return (
+      <>
+        <TypographyH1>Conversations</TypographyH1>
+        <Separator className="my-2" />
+        <div className="flex justify-center items-center h-full">
+          <Loader className="mr-2 animate-spin" />
+          <TypographyMuted>Loading...</TypographyMuted>
+        </div>
+      </>
     );
 
   return (
