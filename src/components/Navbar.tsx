@@ -65,6 +65,14 @@ function NavbarMenu({
       </NavigationMenuItem>
       <NavigationMenuItem className="m-1 w-full cursor-pointer">
         <NavigationMenuLink
+          onClick={() => handleRedirect('/#meetup')}
+          className={cn(buttonVariants({ variant: 'ghost' }), 'w-full')}
+        >
+          {messages?.meetup || 'Meetup'}
+        </NavigationMenuLink>
+      </NavigationMenuItem>
+      <NavigationMenuItem className="m-1 w-full cursor-pointer">
+        <NavigationMenuLink
           onClick={() => handleRedirect('/#contact')}
           className={cn(buttonVariants({ variant: 'ghost' }), 'w-full')}
         >
@@ -88,7 +96,7 @@ export default function Navbar({ messages }: { messages: Record<string, string> 
 
   return (
     <div className="w-full fixed top-0 z-50">
-      <NavigationMenu className="p-2 min-w-full h-[56px] justify-between">
+      <NavigationMenu className="p-2 min-w-full h-[56px] justify-between bg-gradient-to-b from-[#00000020] to-transparent">
         {/*Left*/}
         <div className="flex items-center">
           <Link href="/" className="flex items-center">

@@ -1,13 +1,17 @@
-import { Award, Book, Briefcase, Paperclip } from 'lucide-react';
+import { Award, Book, Briefcase, Check, Users } from 'lucide-react';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 
 import ContactForm from '@/components/ContactForm';
-import { CircledArrow, Professor, Underline } from '@/components/svg';
+import { Professor, Underline } from '@/components/svg';
+import ChattingSvg from '@/components/svg/Chatting';
 import MailSvg from '@/components/svg/Mail';
 import { TypographyH1, TypographyH2, TypographyH3, TypographyLead, TypographyMuted } from '@/components/typography';
 import { buttonVariants } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+
+const hourPrice = 30;
 
 const JapaneseTeacherLanding = () => {
   return (
@@ -25,78 +29,119 @@ const JapaneseTeacherLanding = () => {
           </div>
         </section>
 
-        <div className="max-w-[600px] block lg:hidden mb-5 text-center sm:text-start">
-          <TypographyH2>Welcome to My Japanese Learning World!</TypographyH2>
-          <TypographyMuted>
-            こんにちは (Konnichiwa)! I&apos;m Keita Yasue, a passionate Japanese language teacher. Whether you&apos;re a beginner
-            or looking to polish your skills, I&apos;m here to guide you on your Japanese language journey.
-          </TypographyMuted>
-        </div>
+        <section id="about">
+          <div className="max-w-[800px] mb-5 text-center md:text-start">
+            <TypographyH2>Welcome to My Japanese Learning World!</TypographyH2>
+            <TypographyMuted>
+              こんにちは (Konnichiwa)! I&apos;m Keita Yasue, a passionate Japanese language teacher. Whether you&apos;re a
+              beginner or looking to polish your skills, I&apos;m here to guide you on your Japanese language journey.
+            </TypographyMuted>
+          </div>
 
-        <section id="about" className="mb-16">
-          <TypographyH2>My Services</TypographyH2>
-          <div>
-            <div className="relative flex flex-wrap justify-between items-center">
-              <img src="/keita.png" alt="keita yasue" width={400} />
-              <div className="bg-[#ff920f70] w-[400px] h-[400px] absolute top-0 z-[-1000] rounded-full" />
-              <div className="max-w-[600px] hidden lg:block">
-                <TypographyH2>Welcome to My Japanese Learning World!</TypographyH2>
-                <TypographyLead>
-                  こんにちは (Konnichiwa)! I&apos;m Keita Yasue, a passionate Japanese language teacher. Whether you&apos;re a
-                  beginner or looking to polish your skills, I&apos;m here to guide you on your Japanese language journey.
-                </TypographyLead>
-              </div>
-            </div>
+          <div className="mb-16">
+            <TypographyH2>My Services</TypographyH2>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <ServiceCard
-                  icon={<Book />}
-                  title="One-on-one Lessons"
-                  description="Personalized online or in-person Japanese lessons"
-                />
-                {/* <ServiceCard icon={<Users />} title="Group Classes" description="Interactive group classes for all levels" /> */}
-                <ServiceCard icon={<Briefcase />} title="Business Japanese" description="Specialized lessons for professionals" />
-                <ServiceCard
-                  icon={<Award />}
-                  title="JLPT Preparation"
-                  description="Focused training for the Japanese Language Proficiency Test"
-                />
-                <ServiceCard
-                  icon={<Paperclip />}
-                  title="Cultural Workshops"
-                  description="Explore calligraphy, origami, and tea ceremony"
-                />
+              <div className="relative flex flex-wrap justify-center items-center">
+                <img src="/keita.png" alt="keita yasue" width={400} />
+                <div className="bg-[#ff920f70] w-[400px] h-[400px] absolute top-0 left-0 z-[-1000] rounded-full" />
+                <div className="grid grid-cols-1 gap-8">
+                  <ServiceCard
+                    icon={<Book />}
+                    title="One-on-one Lessons"
+                    description="Personalized online or in-person Japanese lessons"
+                  />
+                  <ServiceCard icon={<Users />} title="Group Classes" description="Interactive group classes for all levels" />
+                  <ServiceCard
+                    icon={<Briefcase />}
+                    title="Business Japanese"
+                    description="Specialized lessons for professionals"
+                  />
+                  <ServiceCard
+                    icon={<Award />}
+                    title="JLPT Preparation"
+                    description="Focused training for the Japanese Language Proficiency Test"
+                  />
+                </div>
               </div>
+              <div></div>
             </div>
           </div>
         </section>
 
-        <section id="recommandations" className="mb-16">
-          <TypographyH2>Recommandations</TypographyH2>
-          <TypographyMuted>TODO</TypographyMuted>
+        <section id="pricing">
+          <TypographyH2>Pricing</TypographyH2>
+          <div className="flex flex-wrap justify-around">
+            <Card className="md:max-w-80 w-full m-1">
+              <CardHeader>
+                <CardTitle>1 hour lesson</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center">
+                  <Check className="text-muted-foreground mr-2" />
+                  <TypographyMuted>In-person lessons or in visio</TypographyMuted>
+                </div>
+                <div className="flex items-center">
+                  <Check className="text-muted-foreground mr-2" />
+                  <TypographyMuted>Audio, video and text resources</TypographyMuted>
+                </div>
+                <div className="flex items-center">
+                  <Check className="text-muted-foreground mr-2" />
+                  <TypographyMuted>Review at the end of the lesson</TypographyMuted>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <TypographyLead>{hourPrice}$</TypographyLead>
+              </CardFooter>
+            </Card>
+            <Card className="md:max-w-80 w-full m-1">
+              <CardHeader>
+                <CardTitle>10 hours package</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center">
+                  <Check className="text-muted-foreground mr-2" />
+                  <TypographyMuted>In-person lessons or in visio</TypographyMuted>
+                </div>
+                <div className="flex items-center">
+                  <Check className="text-muted-foreground mr-2" />
+                  <TypographyMuted>Audio, video and text resources</TypographyMuted>
+                </div>
+                <div className="flex items-center">
+                  <Check className="text-muted-foreground mr-2" />
+                  <TypographyMuted>Review at the end of the lesson</TypographyMuted>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <div className="opacity-40 line-through mr-1">
+                  <TypographyMuted>{hourPrice * 10}$</TypographyMuted>
+                </div>
+                <TypographyLead>{hourPrice * 0.96 * 10}$</TypographyLead>
+              </CardFooter>
+            </Card>
+          </div>
         </section>
 
-        <section id="start" className="text-center">
+        <section id="start" className="flex flex-col items-center text-center mt-10">
           <TypographyH2>Get Started Today!</TypographyH2>
           <TypographyMuted>Ready to embark on your Japanese language adventure?</TypographyMuted>
           <Link href="/dashboard" className={cn(buttonVariants(), 'rounded-full mt-5')}>
             Sign in
           </Link>
-          <div className="flex justify-center mt-5">
-            <CircledArrow color="#ff920f" />
+          <div className="mt-2">
+            <ChattingSvg width={500} height={170} />
           </div>
         </section>
 
-        <section id="contact" className="mt-5 flex items-center justify-around w-full">
-          <div className="hidden lg:block">
+        <section id="meetup" className="mt-5">
+          <TypographyH2>Meetup events</TypographyH2>
+          <iframe src="https://widgets.sociablekit.com/meetup-group-events/iframe/25471111" width="100%" height="690"></iframe>
+        </section>
+
+        <section id="contact" className="flex items-center justify-around w-full">
+          <div className="hidden md:block">
             <MailSvg width={400} height={400} />
           </div>
           <ContactForm />
-        </section>
-
-        <section id="meetup" className="mt-16">
-          <TypographyH2>Meetup events</TypographyH2>
-          <iframe src="https://widgets.sociablekit.com/meetup-group-events/iframe/25471111" width="100%" height="690"></iframe>
         </section>
       </main>
 
@@ -118,7 +163,7 @@ type ServiceCardProps = {
 };
 
 const ServiceCard = ({ icon, title, description }: ServiceCardProps) => (
-  <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center">
+  <div className="max-w-lg bg-white md:bg-transparent p-6 md:p-0 rounded-lg md:shadow-none md:hover:shadow-none shadow-md hover:shadow-lg transition duration-300 flex items-center">
     <div className="text-[#fffcf7] bg-primary-color w-fit h-fit p-3 rounded-full mr-5">{icon}</div>
     <div>
       <TypographyH3>{title}</TypographyH3>
