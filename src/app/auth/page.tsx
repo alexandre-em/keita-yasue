@@ -1,5 +1,6 @@
 'use client';
 import { UserCredential } from 'firebase/auth';
+import { Loader } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 
 import { createSession } from '@/actions/auth';
@@ -59,11 +60,12 @@ export default function AdminPage() {
     <main className="min-h-[calc(100dvh-57px)] flex justify-center items-center">
       <Card>
         <CardHeader>
-          <CardTitle>Admin page</CardTitle>
-          <CardDescription>You are trying to access to a protected route. Please authenticate.</CardDescription>
+          <CardTitle>Dashboard</CardTitle>
+          <CardDescription>You are trying to access a restricted page. Please authenticate.</CardDescription>
         </CardHeader>
         <CardContent>
           <Button onClick={handleSignIn} disabled={loading}>
+            {loading && <Loader className="animate-spin mr-2" />}
             {loading ? 'Signing in...' : 'Sign in with Google'}
           </Button>
         </CardContent>
