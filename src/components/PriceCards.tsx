@@ -21,12 +21,12 @@ const prices = {
       eu: '20€',
     },
     three: {
-      ja: '¥2600',
+      ja: '¥2,600',
       en: '£14.3',
       eu: '17€',
     },
     four: {
-      ja: '¥2500',
+      ja: '¥2,500',
       en: '£13',
       eu: '15€',
     },
@@ -90,7 +90,7 @@ export default function PriceCards() {
       </Card>
       <Card className="md:max-w-80 w-full m-1">
         <CardHeader>
-          <CardTitle>Group lesson</CardTitle>
+          <CardTitle>4 lessons in 3 months</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center">
@@ -105,65 +105,12 @@ export default function PriceCards() {
             <Check className="text-muted-foreground mr-2" />
             <TypographyMuted>Review at the end of the lesson</TypographyMuted>
           </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Providing reference materials as necessary</TypographyMuted>
-          </div>
         </CardContent>
         <CardFooter>
-          <TypographyLead>{prices.group.two[lang]}/persons for 2 persons</TypographyLead>
-        </CardFooter>
-      </Card>
-      <Card className="md:max-w-80 w-full m-1">
-        <CardHeader>
-          <CardTitle>Group lesson</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>In-person lessons or in visio</TypographyMuted>
+          <div className="opacity-40 line-through mr-1">
+            <TypographyMuted>{prices.fourBefore[lang]}</TypographyMuted>
           </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Audio, video and text resources</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Providing reference materials as necessary</TypographyMuted>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <TypographyLead>{prices.group.three[lang]}/persons for 3 persons</TypographyLead>
-        </CardFooter>
-      </Card>
-      <Card className="md:max-w-80 w-full m-1">
-        <CardHeader>
-          <CardTitle>Group lesson</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>In-person lessons or in visio</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Audio, video and text resources</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Providing reference materials as necessary</TypographyMuted>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <TypographyLead>{prices.group.four[lang]}/persons for 4 persons</TypographyLead>
+          <TypographyLead>{prices.four[lang]}</TypographyLead>
         </CardFooter>
       </Card>
       <Card className="md:max-w-80 w-full m-1">
@@ -191,9 +138,9 @@ export default function PriceCards() {
           <TypographyLead>{prices.twelve[lang]}</TypographyLead>
         </CardFooter>
       </Card>
-      <Card className="md:max-w-80 w-full m-1">
+      <Card className="w-full m-2">
         <CardHeader>
-          <CardTitle>4 lessons in 3 months</CardTitle>
+          <CardTitle>Group lesson</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center">
@@ -208,12 +155,15 @@ export default function PriceCards() {
             <Check className="text-muted-foreground mr-2" />
             <TypographyMuted>Review at the end of the lesson</TypographyMuted>
           </div>
-        </CardContent>
-        <CardFooter>
-          <div className="opacity-40 line-through mr-1">
-            <TypographyMuted>{prices.fourBefore[lang]}</TypographyMuted>
+          <div className="flex items-center">
+            <Check className="text-muted-foreground mr-2" />
+            <TypographyMuted>Providing reference materials as necessary</TypographyMuted>
           </div>
-          <TypographyLead>{prices.four[lang]}</TypographyLead>
+        </CardContent>
+        <CardFooter className="flex flex-col items-start">
+          <TypographyLead>{prices.group.two[lang]}/persons for 2 persons</TypographyLead>
+          <TypographyLead>{prices.group.three[lang]}/persons for 3 persons</TypographyLead>
+          <TypographyLead>{prices.group.four[lang]}/persons for 4 persons</TypographyLead>
         </CardFooter>
       </Card>
     </div>
