@@ -1,17 +1,15 @@
-import { Award, Book, Briefcase, Check, Users } from 'lucide-react';
+import { Award, Book, Briefcase, Users } from 'lucide-react';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 
 import ContactForm from '@/components/ContactForm';
+import PriceCards from '@/components/PriceCards';
 import { Professor, Underline } from '@/components/svg';
 import ChattingSvg from '@/components/svg/Chatting';
 import MailSvg from '@/components/svg/Mail';
 import { TypographyH1, TypographyH2, TypographyH3, TypographyLead, TypographyMuted } from '@/components/typography';
 import { buttonVariants } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-
-const hourPrice = 30;
 
 const JapaneseTeacherLanding = () => {
   return (
@@ -70,55 +68,7 @@ const JapaneseTeacherLanding = () => {
 
         <section id="pricing">
           <TypographyH2>Pricing</TypographyH2>
-          <div className="flex flex-wrap justify-around">
-            <Card className="md:max-w-80 w-full m-1">
-              <CardHeader>
-                <CardTitle>1 hour lesson</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center">
-                  <Check className="text-muted-foreground mr-2" />
-                  <TypographyMuted>In-person lessons or in visio</TypographyMuted>
-                </div>
-                <div className="flex items-center">
-                  <Check className="text-muted-foreground mr-2" />
-                  <TypographyMuted>Audio, video and text resources</TypographyMuted>
-                </div>
-                <div className="flex items-center">
-                  <Check className="text-muted-foreground mr-2" />
-                  <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <TypographyLead>{hourPrice}$</TypographyLead>
-              </CardFooter>
-            </Card>
-            <Card className="md:max-w-80 w-full m-1">
-              <CardHeader>
-                <CardTitle>10 hours package</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center">
-                  <Check className="text-muted-foreground mr-2" />
-                  <TypographyMuted>In-person lessons or in visio</TypographyMuted>
-                </div>
-                <div className="flex items-center">
-                  <Check className="text-muted-foreground mr-2" />
-                  <TypographyMuted>Audio, video and text resources</TypographyMuted>
-                </div>
-                <div className="flex items-center">
-                  <Check className="text-muted-foreground mr-2" />
-                  <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <div className="opacity-40 line-through mr-1">
-                  <TypographyMuted>{hourPrice * 10}$</TypographyMuted>
-                </div>
-                <TypographyLead>{hourPrice * 0.96 * 10}$</TypographyLead>
-              </CardFooter>
-            </Card>
-          </div>
+          <PriceCards />
         </section>
 
         <section id="start" className="flex flex-col items-center text-center mt-10">
