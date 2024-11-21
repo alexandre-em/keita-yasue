@@ -17,8 +17,6 @@ import { statusColor } from '@/constants';
 import { fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
 
-import ErrorImage from '@/assets/error.jpg';
-
 type ReservationListProps = {
   limit: number;
   after: string;
