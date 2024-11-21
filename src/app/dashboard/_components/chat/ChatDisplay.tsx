@@ -1,6 +1,6 @@
 'use client';
 import { Send } from 'lucide-react';
-import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { TypographyMuted } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -40,6 +40,12 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
     }
   };
 
+  const isValid = useMemo(() => {
+    const isOnlyTab = message.split(' ').filter((c) => !!c).length === 0;
+    const isOnlySpace = message.split(' ').filter((c) => !!c).length === 0;
+    return !message && !isOnlySpace && !isOnlyTab;
+  }, [message]);
+
   const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
     setMessage(e.target.value);
@@ -48,7 +54,7 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
   const handleSubmit = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      if (conversation?.id && user?.id) {
+      if (conversation?.id && user?.id && isValid) {
         ConversationServiceIns.addMessage(conversation?.id, {
           id: crypto.randomUUID(),
           author: user,
@@ -63,7 +69,7 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
           });
       }
     },
-    [callError, conversation, message, user]
+    [callError, conversation, message, user, isValid]
   );
 
   const handleKeyDown = useCallback(
@@ -159,10 +165,10 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
               value={message}
               onKeyDown={handleKeyDown}
               onChange={handleChange}
-              className="p-4"
+              className="p-4 bg-[#ffffffe0]"
               placeholder={`Chat with ${dest.name}...`}
             />
-            <Button onClick={handleSubmit} size="sm">
+            <Button disabled={!isValid} onClick={handleSubmit} size="sm">
               <Send className="mr-2" />
               Send
             </Button>
