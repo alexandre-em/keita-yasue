@@ -60,13 +60,14 @@ export default function AdminPage() {
     <main className="min-h-[calc(100dvh-57px)] flex justify-center items-center">
       <Card>
         <CardHeader>
+          <img src="/welcome.png" className="h-[150px] w-fit self-center" />
           <CardTitle>Dashboard</CardTitle>
           <CardDescription>You are trying to access a restricted page. Please authenticate.</CardDescription>
         </CardHeader>
         <CardContent>
           <Button onClick={handleSignIn} disabled={loading}>
             {loading && <Loader className="animate-spin mr-2" />}
-            {loading ? 'Signing in...' : 'Sign in with Google'}
+            {loading ? 'Signing in...' : 'Continue with Google'}
           </Button>
         </CardContent>
       </Card>

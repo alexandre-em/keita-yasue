@@ -17,6 +17,8 @@ import { statusColor } from '@/constants';
 import { fbTimeToDate } from '@/lib/utils';
 import { ReservationServiceIns } from '@/services';
 
+import ErrorImage from '@/assets/error.jpg';
+
 type ReservationListProps = {
   limit: number;
   after: string;
@@ -92,7 +94,12 @@ export default function ReservationList({ limit, after, before, status, user }: 
       </>
     );
   if (reservationResult && reservationResult.error)
-    return <TypographyLarge>An error occurred. Please try again later.</TypographyLarge>;
+    return (
+      <div>
+        <img src="/error.png" alt="error" />
+        <TypographyLarge>An error occurred. Please try again later.</TypographyLarge>
+      </div>
+    );
 
   const cursorAfter = reservationResult?.result?.docs[limit - 1]?.id || '';
   const cursorBefore = reservationResult?.result?.docs[0]?.id || '';
@@ -163,7 +170,8 @@ export default function ReservationList({ limit, after, before, status, user }: 
         </TableBody>
       </Table>
       {(!reservationResult.reservations || (reservationResult.reservations && reservationResult.reservations.length === 0)) && (
-        <div className="w-full text-center my-2">
+        <div className="w-full h-full flex flex-col justify-center items-center my-2">
+          <img src="/error.png" alt="error" className="h-[150px]" />
           <TypographyMuted>No reservation found</TypographyMuted>
         </div>
       )}

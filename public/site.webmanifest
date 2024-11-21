@@ -1,0 +1,23 @@
+{
+  "name": "Keita Yasue",
+  "short_name": "Keita Yasue",
+  "description": "Keita Yasue's website, a Japanese Language Teacher located in Japan, Osaka",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#fdf9f1",
+  "display": "standalone"
+}
+
