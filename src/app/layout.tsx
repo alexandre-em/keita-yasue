@@ -61,9 +61,9 @@ const navBarMessages = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, 'bg-[#fffcf7]')}>
+      <body className={cn(inter.className, 'bg-[#f8f8f8]')}>
         <Navbar messages={navBarMessages} />
-        <main className="min-h-[calc(100dvh-97px)] flex flex-col mt-[calc(1.25rem+36px)]">{children}</main>
+        <main className="min-h-[calc(100dvh-97px)] w-full flex flex-col mt-[calc(1.25rem+36px)]">{children}</main>
         <Toaster />
       </body>
     </html>

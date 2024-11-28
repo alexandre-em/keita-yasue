@@ -2,7 +2,7 @@
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '@/components/ui/navigation-menu';
@@ -93,14 +93,33 @@ function NavbarMenu({
 
 export default function Navbar({ messages }: { messages: Record<string, string> }) {
   const [open, setOpen] = useState<boolean>(false);
+  const [hidden, setHidden] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(window?.pageYOffset ?? 0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+      setHidden(prevScrollPos < currentScrollPos && currentScrollPos > 50);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollPos]);
 
   return (
-    <div className="w-full fixed top-0 z-50">
-      <NavigationMenu className="p-2 min-w-full h-[56px] justify-between bg-gradient-to-b from-[#00000020] to-transparent">
+    <div
+      className={`w-full flex justify-center fixed top-0 z-50 transition-transform duration-300 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}
+    >
+      <NavigationMenu className="p-5 min-w-[85%] rounded-full h-[56px] justify-between bg-white my-5 shadow-lg">
         {/*Left*/}
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
-            <h2 className="scroll-m-20 text-xl font-extrabold tracking-tight ml-2">Keita Yasue</h2>
+            {/* <h2 className="scroll-m-20 text-xl font-extrabold tracking-tight ml-2">Keita Yasue</h2> */}
+            <img src="/favicon-96x96.png" width={45} height={45} alt="logo" />
           </Link>
         </div>
 

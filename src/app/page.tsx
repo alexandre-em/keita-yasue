@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 const JapaneseTeacherLanding = () => {
   return (
     <div className="relative overflow-x-hidden">
-      <main className="container mx-auto px-4 py-8 m-5 max-w-[1100px]">
+      <main className="container mx-auto px-4 py-8 m-5">
         <section id="hero" className="text-center py-16">
           <TypographyH1>Keita Yasue</TypographyH1>
           <TypographyLead>Japanese Language Teacher</TypographyLead>
@@ -27,7 +27,7 @@ const JapaneseTeacherLanding = () => {
           </div>
         </section>
 
-        <section id="about">
+        <section id="about" className="flex flex-col w-full items-center mt-10">
           <div className="max-w-[800px] mb-5 text-center md:text-start">
             <TypographyH2>Welcome to My Japanese Learning World!</TypographyH2>
             <TypographyMuted>
@@ -66,7 +66,7 @@ const JapaneseTeacherLanding = () => {
           </div>
         </section>
 
-        <section id="pricing">
+        <section id="pricing" className="flex flex-col items-center mt-10">
           <TypographyH2>Pricing</TypographyH2>
           <PriceCards />
         </section>

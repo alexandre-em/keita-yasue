@@ -1,8 +1,8 @@
 'use client';
-import { Check } from 'lucide-react';
+import { BadgeCheck, Check, Clock4, UsersRound } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { TypographyLead, TypographyMuted } from './typography';
 
@@ -53,6 +53,48 @@ const prices = {
   },
 };
 
+type PriceCardProps = {
+  title: string;
+  subtitle?: string;
+  footer: string[];
+};
+
+export function PriceCard({ title, subtitle, footer }: PriceCardProps) {
+  return (
+    <Card className="md:max-w-[460px] m-2 w-[90%] h-[90%] transition-transform duration-300 hover:scale-110">
+      <CardHeader className="bg-primary-color rounded-t-lg">
+        <div className="flex items-center">
+          <Clock4 className="text-white mr-2" />
+          <CardTitle className="text-white font-bold">{title}</CardTitle>
+        </div>
+        {subtitle && <CardDescription className="text-muted">{subtitle}</CardDescription>}
+      </CardHeader>
+      <CardContent className="mt-5">
+        <div className="flex items-center">
+          <BadgeCheck className="text-primary-color mr-2" />
+          <TypographyMuted>In-person lessons or in visio</TypographyMuted>
+        </div>
+        <div className="flex items-center">
+          <BadgeCheck className="text-primary-color mr-2" />
+          <TypographyMuted>Audio, video and text resources</TypographyMuted>
+        </div>
+        <div className="flex items-center">
+          <BadgeCheck className="text-primary-color mr-2" />
+          <TypographyMuted>Review at the end of the lesson</TypographyMuted>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end">
+        {footer[1] && (
+          <div className="opacity-40 line-through mr-1">
+            <TypographyMuted>{footer[1]}</TypographyMuted>
+          </div>
+        )}
+        <TypographyLead>{footer[0]}</TypographyLead>
+      </CardFooter>
+    </Card>
+  );
+}
+
 export default function PriceCards() {
   const [lang, setLang] = useState<LangEnum>('en'); // Default to 'en' or another default locale
 
@@ -66,101 +108,35 @@ export default function PriceCards() {
 
   return (
     <div className="flex flex-wrap justify-around">
-      <Card className="md:max-w-80 w-full m-1">
-        <CardHeader>
-          <CardTitle>1 hour lesson</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <PriceCard title="1 hour lesson" footer={[prices.single[lang]]} />
+      <PriceCard title="4 hours lessons" subtitle="3 months" footer={[prices.four[lang], prices.fourBefore[lang]]} />
+      <PriceCard title="12 hours lessons" subtitle="6 months" footer={[prices.twelve[lang], prices.twelveBefore[lang]]} />
+      <Card className="w-full m-2 transition-transform duration-300 hover:scale-110">
+        <CardHeader className="bg-primary-color rounded-t-lg">
           <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
+            <UsersRound className="text-white mr-2" />
+            <CardTitle className="text-white font-bold">Group lesson</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="mt-5">
+          <div className="flex items-center">
+            <BadgeCheck className="text-primary-color mr-2" />
             <TypographyMuted>In-person lessons or in visio</TypographyMuted>
           </div>
           <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
+            <BadgeCheck className="text-primary-color mr-2" />
             <TypographyMuted>Audio, video and text resources</TypographyMuted>
           </div>
           <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <TypographyLead>{prices.single[lang]}</TypographyLead>
-        </CardFooter>
-      </Card>
-      <Card className="md:max-w-80 w-full m-1">
-        <CardHeader>
-          <CardTitle>4 lessons in 3 months</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>In-person lessons or in visio</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Audio, video and text resources</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <div className="opacity-40 line-through mr-1">
-            <TypographyMuted>{prices.fourBefore[lang]}</TypographyMuted>
-          </div>
-          <TypographyLead>{prices.four[lang]}</TypographyLead>
-        </CardFooter>
-      </Card>
-      <Card className="md:max-w-80 w-full m-1">
-        <CardHeader>
-          <CardTitle>12 lessons in 6 months</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>In-person lessons or in visio</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Audio, video and text resources</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Review at the end of the lesson</TypographyMuted>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <div className="opacity-40 line-through mr-1">
-            <TypographyMuted>{prices.twelveBefore[lang]}</TypographyMuted>
-          </div>
-          <TypographyLead>{prices.twelve[lang]}</TypographyLead>
-        </CardFooter>
-      </Card>
-      <Card className="w-full m-2">
-        <CardHeader>
-          <CardTitle>Group lesson</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>In-person lessons or in visio</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
-            <TypographyMuted>Audio, video and text resources</TypographyMuted>
-          </div>
-          <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
+            <BadgeCheck className="text-primary-color mr-2" />
             <TypographyMuted>Review at the end of the lesson</TypographyMuted>
           </div>
           <div className="flex items-center">
-            <Check className="text-muted-foreground mr-2" />
+            <BadgeCheck className="text-primary-color mr-2" />
             <TypographyMuted>Providing reference materials as necessary</TypographyMuted>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col items-start">
+        <CardFooter className="flex flex-col items-end">
           <TypographyLead>{prices.group.two[lang]}/persons for 2 persons</TypographyLead>
           <TypographyLead>{prices.group.three[lang]}/persons for 3 persons</TypographyLead>
           <TypographyLead>{prices.group.four[lang]}/persons for 4 persons</TypographyLead>
