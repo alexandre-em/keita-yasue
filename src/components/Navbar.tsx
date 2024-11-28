@@ -94,20 +94,22 @@ function NavbarMenu({
 export default function Navbar({ messages }: { messages: Record<string, string> }) {
   const [open, setOpen] = useState<boolean>(false);
   const [hidden, setHidden] = useState(false);
-  const [prevScrollPos, setPrevScrollPos] = useState(window?.pageYOffset ?? 0);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
-      setHidden(prevScrollPos < currentScrollPos && currentScrollPos > 50);
-      setPrevScrollPos(currentScrollPos);
-    };
+    if (typeof window !== 'undefined') {
+      const handleScroll = () => {
+        const currentScrollPos = window.scrollY;
+        setHidden(prevScrollPos < currentScrollPos && currentScrollPos > 50);
+        setPrevScrollPos(currentScrollPos);
+      };
 
-    window.addEventListener('scroll', handleScroll);
+      window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
   }, [prevScrollPos]);
 
   return (

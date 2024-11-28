@@ -1,5 +1,5 @@
 'use client';
-import { BadgeCheck, Check, Clock4, UsersRound } from 'lucide-react';
+import { BadgeCheck, Clock4, UsersRound } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
