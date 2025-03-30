@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar messages={navBarMessages} />
         <main className="min-h-[calc(100dvh-97px)] w-full flex flex-col mt-[calc(1.25rem+36px)]">{children}</main>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
