@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { BookOpenCheck, Calendar as CalendarIcon, Loader } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { sendReservationMail } from '@/actions/mail';
 import { TypographyMuted, TypographySmall } from '@/components/typography';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -19,7 +20,6 @@ import {
 } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { admin } from '@/constants/admin';
 import { NEXT_PUBLIC_EMAILJS_RESERVATION_TEMPLATE_ID, NEXT_PUBLIC_EMAILJS_SERVICE_ID } from '@/constants/env';
 import { toast } from '@/hooks/use-toast';
 import '@/lib/email';
@@ -43,18 +43,17 @@ export default function CreateReservation({ user }: CreateReservationProps) {
   const sendConfirmationMail = useCallback(
     async (date: string, time: string) => {
       const newData = {
-        lesson_date: date,
-        lesson_time: time,
-        reply_to: admin.email,
-        to_email: user.email,
-        to_name: user.name,
+        date,
+        time,
       };
 
-      const response = await send(NEXT_PUBLIC_EMAILJS_SERVICE_ID!, NEXT_PUBLIC_EMAILJS_RESERVATION_TEMPLATE_ID!, newData);
-
-      if (response.status === 200) {
-        return true;
-      } else throw new Error(response.text);
+      await sendReservationMail(
+        {
+          email: user.email,
+          name: user.name,
+        },
+        newData
+      );
     },
     [user]
   );

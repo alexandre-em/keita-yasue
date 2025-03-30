@@ -2,6 +2,7 @@
 import { Send } from 'lucide-react';
 import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 
+import { sendMessageMail } from '@/actions/mail';
 import { TypographyMuted } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -57,6 +58,18 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
         })
           .then((res) => {
             if (res.error) callError(res.error);
+            // const dest = conversation.members.filter((member) => (member as UserType).id !== user.id)[0] as UserType;
+            // sendMessageMail(
+            //   {
+            //     email: dest.email,
+            //     name: dest.name,
+            //   },
+            //   {
+            //     email: user.email,
+            //     name: user.name,
+            //   },
+            //   message
+            // );
           })
           .finally(() => {
             setMessage('');
