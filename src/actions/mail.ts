@@ -70,6 +70,7 @@ export const sendReservationMail = async (to: ContactType, data: ReservationData
   const emailParams = new EmailParams()
     .setFrom(author)
     .setTo(recipients)
+    .setCc([new Recipient(admin.email, 'Keita Yasue')])
     .setReplyTo(new Recipient(admin.email, 'Keita Yasue'))
     .setSubject(`New reservation with Keita the ${data.date}`)
     .setTemplateId(process.env['NEXT_PUBLIC_MAILSENDER_RESERVATION_TEMPLATE_ID'] ?? '')
