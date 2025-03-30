@@ -2,7 +2,6 @@
 import { Send } from 'lucide-react';
 import { ChangeEvent, KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 
-import { sendMessageMail } from '@/actions/mail';
 import { TypographyMuted } from '@/components/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';

@@ -1,6 +1,5 @@
 'use client';
 
-import { send } from '@emailjs/browser';
 import { format } from 'date-fns';
 import { BookOpenCheck, Calendar as CalendarIcon, Loader } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -20,7 +19,6 @@ import {
 } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { NEXT_PUBLIC_EMAILJS_RESERVATION_TEMPLATE_ID, NEXT_PUBLIC_EMAILJS_SERVICE_ID } from '@/constants/env';
 import { toast } from '@/hooks/use-toast';
 import '@/lib/email';
 import { cn, fbTimeToDate } from '@/lib/utils';
