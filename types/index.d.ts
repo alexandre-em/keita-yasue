@@ -1,7 +1,10 @@
 type IdParamsType = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
+  searchParams?: Record<string | string[] | undefined>;
+};
+type SearchParamsType = {
   searchParams?: Record<string | string[] | undefined>;
 };
 

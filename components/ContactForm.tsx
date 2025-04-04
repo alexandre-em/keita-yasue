@@ -36,7 +36,7 @@ export default function ContactForm() {
     resolver: zodResolver(FormSchema),
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  // async function onSubmit(data: z.infer<typeof FormSchema>) {
     // const newData = {
     //   ...data,
     //   to_name: admin.name,
@@ -60,7 +60,9 @@ export default function ContactForm() {
     //     position: 'top-center',
     //   });
     // }
-  }
+  // }
+  
+  async function onSubmit() {}
 
   return (
     <Card className="w-[500px]">

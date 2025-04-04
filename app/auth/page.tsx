@@ -56,9 +56,11 @@ export default function AdminPage() {
 
   return (
     <main className="min-h-[calc(100dvh-57px)] flex justify-center items-center">
-      <Card>
+      <Card className="w-[500px]">
         <CardHeader>
-          <img src="/welcome.png" className="h-[150px] w-[112.45px] self-center" />
+          <div className="w-full flex justify-center">
+            <img src="/welcome.png" className="h-[150px] w-[112.45px]" />
+          </div>
           <CardTitle>Dashboard</CardTitle>
           <CardDescription>You are trying to access a restricted page. Please authenticate.</CardDescription>
         </CardHeader>

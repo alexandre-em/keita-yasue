@@ -24,8 +24,9 @@ import UpdateReservationReview from './_components/UpdateReservationReview';
 import UpdateReservationStatus from './_components/UpdateReservationStatus';
 import ChatDestButton from '../../_components/chat/ChatDestButton';
 
-export default async function ReservationId({ params: { id } }: IdParamsType) {
-  const user = getUserDetail();
+export default async function ReservationId({ params }: IdParamsType) {
+  const { id } = await params;
+  const user = await getUserDetail();
 
   const { result, error } = await ReservationServiceIns.getById(id);
 

@@ -83,6 +83,7 @@ export default function CreateReservation({ user }: CreateReservationProps) {
             icon: <CircleCheckBig />,
           });
         } catch (e) {
+          console.error(e)
           toast('An error occurred...', {
             description: 'Please wait if reservation created or try again later',
             icon: <CircleX />,

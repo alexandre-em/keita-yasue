@@ -7,10 +7,9 @@ import { getUserDetail } from '@/constants/cookies';
 import CreateReservation from './_components/CreateReservation';
 import ReservationList from './_components/ReservationList';
 
-export default function DashboardPage({
-  searchParams: { limit = '10', after = undefined, before = undefined, status },
-}: IdParamsType) {
-  const user = getUserDetail();
+export default async function DashboardPage({ searchParams }: IdParamsType) {
+  const { limit = '10', after = undefined, before = undefined, status } = await searchParams;
+  const user = await getUserDetail();
 
   return (
     <div className="flex flex-col m-5 mt-0">

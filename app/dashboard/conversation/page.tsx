@@ -4,8 +4,8 @@ import { getUserDetail } from '@/constants/cookies';
 
 import Chat from '../_components/chat/ChatDialog';
 
-export default function ConversationPage() {
-  const user = getUserDetail();
+export default async function ConversationPage() {
+  const user = await getUserDetail();
 
   return (
     <div className="m-5 mt-0">
