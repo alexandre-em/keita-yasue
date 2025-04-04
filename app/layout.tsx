@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="min-h-[calc(100dvh-97px)] w-full flex flex-col mt-[calc(1.25rem+36px)]">{children}</main>
         <Toaster />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
