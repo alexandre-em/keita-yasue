@@ -36,7 +36,7 @@ export function ChatList({ items, user }: MailListProps) {
           >
             <div className="flex w-full gap-1">
               <Avatar>
-                <AvatarImage src={dests[i][0].image} />
+                <AvatarImage src={dests[i][0].image ?? undefined} />
                 <AvatarFallback>{dests[i][0].name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">

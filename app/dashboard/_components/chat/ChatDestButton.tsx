@@ -18,7 +18,7 @@ export default function ChatDestButton({ dest, user }: ChatDestDialogProps) {
   const handleClick = useCallback(async () => {
     if (chat) {
       chat.setLoading(true);
-      const userMember = dest.role === 'user' ? dest.id : user.id;
+      const userMember = dest.role === 'USER' ? dest.id : user.id;
       const res = await ConversationServiceIns.getConversationsByUser(userMember);
 
       if (res.error) throw new Error('Error while checking conversation');
@@ -36,9 +36,7 @@ export default function ChatDestButton({ dest, user }: ChatDestDialogProps) {
           messages: [],
         });
       } else {
-        if (conversations) {
-          conversationId = conversations[0].id;
-        }
+        if (conversations) conversationId = conversations[0].id;
       }
 
       chat.onNewRoom(conversationId);

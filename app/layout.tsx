@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
-import Navbar from '@/components/Navbar';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 
@@ -53,18 +52,11 @@ export const metadata: Metadata = {
   },
 };
 
-const navBarMessages = {
-  about: 'About',
-  contact: 'Contact',
-  dashboard: 'Sign In',
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.className, 'bg-[#f8f8f8]')}>
-        <Navbar messages={navBarMessages} />
-        <main className="min-h-[calc(100dvh-97px)] w-full flex flex-col mt-[calc(1.25rem+36px)]">{children}</main>
+        <main className="min-h-[calc(100dvh-97px)] w-full flex flex-col">{children}</main>
         <Toaster />
         <Analytics />
         <SpeedInsights />

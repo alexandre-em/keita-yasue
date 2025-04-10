@@ -17,6 +17,14 @@ type FirebaseDateType = {
   nanoseconds: number;
 };
 
+type PrismaPaginationOptionsType = {
+  limit?: number;
+  page?: number;
+  cursor?: string;
+  orderByQuery?: 'asc' | 'desc';
+  status?: StatusType;
+  role?: 'ADMIN' | 'USER';
+};
 type FirebasePaginationOptionsType = {
   lim?: number;
   cursor?: {

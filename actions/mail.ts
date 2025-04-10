@@ -46,6 +46,7 @@ export const sendMessageMail = async (to: ContactType, from: ContactType, messag
 type ReservationData = {
   date: string;
   time: string;
+  jpTime: string;
 };
 
 export const sendReservationMail = async (to: ContactType, data: ReservationData) => {
@@ -62,6 +63,7 @@ export const sendReservationMail = async (to: ContactType, data: ReservationData
         name: to.name,
         date: data.date,
         time: data.time,
+        jptime: data.jpTime,
         account_name: 'Keita Yasue',
       },
     },

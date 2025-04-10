@@ -10,10 +10,18 @@ import { TypographyH1, TypographyH2, TypographyH3, TypographyLead, TypographyMut
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import PricingCard from '@/components/PricingCard';
+import Navbar from '@/components/Navbar';
+
+const navBarMessages = {
+  about: 'About',
+  contact: 'Contact',
+  dashboard: 'Sign In',
+};
 
 const JapaneseTeacherLanding = () => {
   return (
-    <div className="relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden mt-[calc(1.25rem+36px)]">
+      <Navbar messages={navBarMessages} />
       <main className="container mx-auto px-4 py-8 m-5">
         <section id="hero" className="text-center py-16">
           <TypographyH1>Keita Yasue</TypographyH1>

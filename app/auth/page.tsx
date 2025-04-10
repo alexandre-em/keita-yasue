@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import googleAuthInstance from '@/lib/auth';
-import { UserServiceIns } from '@/services';
 
 export default function AdminPage() {
   const [loading, setLoading] = useState(false);
@@ -23,25 +22,32 @@ export default function AdminPage() {
         icon: <CircleCheckBig />,
       });
 
-      const userResult = await UserServiceIns.getById(user.user.uid);
-      let result = userResult.result;
+      // const userResult = await UserServiceIns.getById(user.user.uid);
+      const data = await fetch(`/api/users/google/${user.user.uid}`);
+      let result = (await data.json()) as UserType;
 
-      if (!result?.exists()) {
-        await UserServiceIns.createOne(user.user.uid, {
-          name: user.user.displayName!,
-          email: user.user.email!,
-          image: user.user.photoURL!,
-          level: 0,
-          createdAt: new Date(),
-          id: user.user.uid,
-          role: 'user',
-          emailVerifiedAt: new Date(),
+      if (!result) {
+        const responseUser = await fetch(`/api/users`, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: user.user.displayName!,
+            email: user.user.email!,
+            image: user.user.photoURL!,
+            createdAt: new Date(),
+            googleId: user.user.uid,
+            role: 'USER',
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            credit: 0,
+            emailVerifiedAt: new Date(),
+          }),
         });
+        const userId = (await responseUser.json()) as UserType;
 
-        result = (await UserServiceIns.getById(user.user.uid)).result;
+        const resUser = await fetch(`/api/users/${userId.id}`);
+        result = await resUser.json();
       }
 
-      const stringDetails = JSON.stringify(result?.data());
+      const stringDetails = JSON.stringify(result);
 
       await createSession(user.user.uid, stringDetails);
     } catch (error) {

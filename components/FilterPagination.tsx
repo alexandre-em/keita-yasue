@@ -9,25 +9,23 @@ import { TypographyH4 } from './typography';
 type FilterPaginationProps = {
   searchParams: {
     limit?: number;
-    after?: string;
-    before?: string;
+    page?: number;
     status?: StatusType;
   };
 };
 
-export default function FilterPagination({ searchParams: { limit, after, before, status } }: FilterPaginationProps) {
+export default function FilterPagination({ searchParams: { limit, page, status } }: FilterPaginationProps) {
   const handleRedirect = useCallback(
     (key: string, value: string) => {
       const query = [];
 
       if (key === 'limit' || limit !== undefined) query.push(`limit=${key === 'limit' ? value : limit}`);
-      if (after !== undefined) query.push(`after=${after}`);
-      if (before !== undefined) query.push(`before=${before}`);
+      if (page !== undefined) query.push(`page=${page}`);
       if (key === 'status' || status !== undefined) query.push(`status=${key === 'status' ? value : status}`);
 
       redirect(`/dashboard?${query.join('&')}`);
     },
-    [limit, after, before, status]
+    [limit, page, status]
   );
 
   return (
