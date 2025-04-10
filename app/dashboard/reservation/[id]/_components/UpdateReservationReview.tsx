@@ -14,44 +14,39 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { ReservationServiceIns } from '@/services';
 
 type UpdateReservationReviewProps = {
   id: string;
-  review?: string;
+  review: string | null;
 };
 
 export default function UpdateReservationReview({ id, review }: UpdateReservationReviewProps) {
-  const [newReview, setNewReview] = useState<string | undefined>(review);
+  const [newReview, setNewReview] = useState<string | null>(review);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (id && newReview) {
       setLoading(true);
-      ReservationServiceIns.updateOne(id, {
-        review: newReview,
-        updatedAt: new Date(),
-      })
-        .then((data) => {
-          if (!data.error) {
-            toast("Review's updated", {
-              description: id,
-              icon: <CircleCheckBig />,
-            });
-          } else {
-            toast('An error occurred', {
-              description: 'Could not updated the review',
-              icon: <CircleX />,
-            });
-          }
-        })
-        .catch(() => {
-          toast('An error occurred', {
-            description: 'Could not updated the review',
-            icon: <CircleX />,
-          });
-        })
-        .finally(() => setLoading(false));
+      const result = await fetch('/api/reservations', {
+        method: 'POST',
+        body: JSON.stringify({
+          review: newReview,
+          updatedAt: new Date(),
+        }),
+      });
+
+      if (result.status === 500)
+        toast('An error occurred', {
+          description: 'Could not updated the review',
+          icon: <CircleX />,
+        });
+      else
+        toast("Review's updated", {
+          description: id,
+          icon: <CircleCheckBig />,
+        });
+
+      setLoading(false);
     }
   }, [id, newReview]);
 
@@ -70,7 +65,7 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
             <Textarea
               className="mt-2"
               placeholder="Type your review here."
-              value={newReview}
+              value={newReview ?? ''}
               onChange={(e) => setNewReview(e.target.value)}
               rows={20}
             />

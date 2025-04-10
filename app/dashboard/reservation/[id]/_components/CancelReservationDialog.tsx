@@ -38,7 +38,7 @@ export default function CancelReservationDialog({ id, status }: CancelReservatio
 
       cancelPromise
         .then((data) => {
-          if (!data.error) {
+          if (data) {
             toast('Status updated', {
               description: id,
               icon: <CircleCheckBig />,

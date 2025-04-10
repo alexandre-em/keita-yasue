@@ -124,7 +124,7 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
         <div className="flex items-start p-4">
           <div className="flex items-start gap-4 text-sm">
             <Avatar>
-              <AvatarImage src={dest.image} alt={dest.name} />
+              <AvatarImage src={dest.image ?? undefined} alt={dest.name} />
               <AvatarFallback>
                 {dest.name
                   .split(' ')

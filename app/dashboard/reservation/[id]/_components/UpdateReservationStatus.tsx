@@ -32,7 +32,7 @@ export default function UpdateReservationStatus({ id }: UpdateReservationStatusP
         updatedAt: new Date(),
       })
         .then((data) => {
-          if (!data.error) {
+          if (data) {
             toast('Status updated', {
               description: id,
               icon: <CircleCheckBig />,

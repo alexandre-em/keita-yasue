@@ -6,6 +6,8 @@ export const statusColor: Record<StatusType, 'destructive' | 'outline' | 'succes
   TO_VALIDATE: 'secondary',
   VALIDATED: 'success',
   DONE: 'default',
+  IDLE: 'outline',
+  PENDING: 'outline',
 };
 
 export const levelName = [
