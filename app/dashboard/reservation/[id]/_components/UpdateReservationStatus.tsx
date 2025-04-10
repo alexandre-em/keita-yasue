@@ -14,48 +14,47 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { ReservationServiceIns } from '@/services';
 
 type UpdateReservationStatusProps = {
   id: string;
+  status: StatusType;
 };
 
-export default function UpdateReservationStatus({ id }: UpdateReservationStatusProps) {
+export default function UpdateReservationStatus({ id, status }: UpdateReservationStatusProps) {
   const [newStatus, setNewStatus] = useState<StatusType>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (id && newStatus) {
       setLoading(true);
-      ReservationServiceIns.updateOne(id, {
-        status: newStatus,
-        updatedAt: new Date(),
-      })
-        .then((data) => {
-          if (data) {
-            toast('Status updated', {
-              description: id,
-              icon: <CircleCheckBig />,
-            });
-          } else {
-            toast('An error occurred', {
-              description: 'Could not updated the status',
-              icon: <CircleX />,
-            });
-          }
-        })
-        .catch(() => {
-          toast('An error occurred', {
-            description: 'Could not updated the status',
-            icon: <CircleX />,
-          });
-        })
-        .finally(() => setLoading(false));
+      const result = await fetch('/api/reservations/update', {
+        method: 'POST',
+        body: JSON.stringify({
+          id,
+          status: newStatus,
+          updatedAt: new Date(),
+        }),
+      });
+
+      if (result.status === 500)
+        toast('An error occurred', {
+          description: 'Could not updated the review',
+          icon: <CircleX />,
+        });
+      else
+        toast("Review's updated", {
+          description: id,
+          icon: <CircleCheckBig />,
+        });
+
+      setLoading(false);
+      setOpen(false);
     }
   }, [id, newStatus]);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mr-5 my-1">Update status</Button>
       </DialogTrigger>
@@ -71,10 +70,15 @@ export default function UpdateReservationStatus({ id }: UpdateReservationStatusP
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="TO_VALIDATE">TO_VALIDATE</SelectItem>
-              <SelectItem value="TO_CANCEL">TO_CANCEL</SelectItem>
-              <SelectItem value="VALIDATED">VALIDATED</SelectItem>
-              <SelectItem value="CANCELLED">CANCELLED</SelectItem>
-              <SelectItem value="DONE">DONE</SelectItem>
+              <SelectItem value="VALIDATED" hidden={status === 'TO_VALIDATE'}>
+                VALIDATED
+              </SelectItem>
+              <SelectItem value="CANCELLED" hidden={status !== 'TO_CANCEL'}>
+                CANCELLED
+              </SelectItem>
+              <SelectItem value="DONE" hidden={status === 'VALIDATED'}>
+                DONE
+              </SelectItem>
             </SelectContent>
           </Select>
         </DialogDescription>

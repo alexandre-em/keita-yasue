@@ -21,16 +21,18 @@ type UpdateReservationReviewProps = {
 };
 
 export default function UpdateReservationReview({ id, review }: UpdateReservationReviewProps) {
-  const [newReview, setNewReview] = useState<string | null>(review);
+  const [newReview, setNewReview] = useState<string | null>(JSON.parse(review ?? ''));
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleSubmit = useCallback(async () => {
     if (id && newReview) {
       setLoading(true);
-      const result = await fetch('/api/reservations', {
+      const result = await fetch('/api/reservations/update', {
         method: 'POST',
         body: JSON.stringify({
-          review: newReview,
+          id,
+          studentReview: JSON.stringify(newReview),
           updatedAt: new Date(),
         }),
       });
@@ -47,11 +49,12 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
         });
 
       setLoading(false);
+      setOpen(false);
     }
   }, [id, newReview]);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mr-5 my-1">Update review</Button>
       </DialogTrigger>

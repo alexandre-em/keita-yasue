@@ -118,7 +118,7 @@ export default async function ReservationId({ params }: IdParamsType) {
             {/* Updates buttons for admin */}
             {user.role === 'ADMIN' && (
               <>
-                <UpdateReservationStatus id={id} />
+                <UpdateReservationStatus id={id} status={reservation.status} />
                 {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
                   <UpdateReservationReview id={id} review={reservation.studentReview} />
                 )}
@@ -134,7 +134,7 @@ export default async function ReservationId({ params }: IdParamsType) {
           <CardHeader>
             <CardTitle className="mb-2">Resume of the lesson</CardTitle>
             {reservation.studentReview.split('\\n').map((review, i) => (
-              <p key={`${review}-${i}`} className="text-muted-foreground text-sm leading-none italic [&:not(:first-child)]:mt-6">
+              <p key={`${review}-${i}`} className="text-muted-foreground text-sm leading-none italic [&:not(:first-child)]:mt-2">
                 {review}
               </p>
             ))}
