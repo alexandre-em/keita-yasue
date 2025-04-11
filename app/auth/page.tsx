@@ -43,7 +43,7 @@ export default function AdminPage() {
         });
         const userId = (await responseUser.json()) as UserType;
 
-        const resUser = await fetch(`/api/users/${userId.id}`);
+        const resUser = await fetch(`/api/users/user/${userId.id}`);
         result = await resUser.json();
       }
 

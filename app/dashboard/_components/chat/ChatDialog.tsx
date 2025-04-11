@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { fbTimeToDate } from '@/lib/utils';
-import { ConversationServiceIns, UserServiceIns } from '@/services';
-import { FirebaseResponseType } from '@/services/entity';
+import { ConversationServiceIns } from '@/services';
 
 import { ChatDisplay } from './ChatDisplay';
 import { ChatList } from './ChatList';
@@ -25,9 +24,9 @@ export default function Chat({ user }: ChatProps) {
   const [error, setError] = useState<Record<string, string>>();
 
   useEffect(() => {
-    if (user.id) {
+    if (user.googleId) {
       chat?.setLoading(true);
-      ConversationServiceIns.getConversationsByUser(user.id, {
+      ConversationServiceIns.getConversationsByUser(user.googleId, {
         orderByQuery: {
           value: 'lastMessage',
           order: 'desc',
@@ -40,16 +39,16 @@ export default function Chat({ user }: ChatProps) {
             onSnapshot(query!, {
               next: (snapshot) => {
                 const convers = snapshot.docs.map(async (conver) => {
-                  const membersPromiseArray = conver.data().members.map((memberId: string) => UserServiceIns.getById(memberId));
+                  const membersPromiseArray = conver
+                    .data()
+                    .members.map(async (memberId: string) => await (await fetch(`/api/users/google/${memberId}`)).json());
 
-                  const promises = await Promise.all(membersPromiseArray);
-
-                  const membs = promises.map((usr: FirebaseResponseType) => usr.result.data()) as UserType[];
+                  const members = await Promise.all(membersPromiseArray);
 
                   return {
                     ...conver.data(),
                     id: conver.id,
-                    members: membs,
+                    members,
                     createdAt: fbTimeToDate(conver.data().createdAt),
                     lastMessage: conver.data().lastMessage ? fbTimeToDate(conver.data().lastMessage) : undefined,
                     messages: conver.data().messages.map((msg: MessageType) => ({

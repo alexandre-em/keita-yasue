@@ -21,8 +21,6 @@ import { fbTimeToDate } from '@/lib/utils';
 
 import { EntityService } from './entity';
 
-import { UserServiceIns } from '.';
-
 const db = getFirestore(app);
 
 export class ConversationService extends EntityService<ConversationType> {
@@ -66,16 +64,25 @@ export class ConversationService extends EntityService<ConversationType> {
     }
 
     return {
-      result: result?.docs.map((res) => ({
-        ...res.data(),
-        id: res.id,
-        createdAt: fbTimeToDate(res.data().createdAt),
-        messages: res.data().messages.map((msg: MessageType) => ({
-          ...msg,
-          date: fbTimeToDate(msg.date as FirebaseDateType),
-        })) as MessageType[],
-        members: res.data().members.map((usr: string) => UserServiceIns.getById(usr)),
-      })),
+      result: result?.docs.map(async (res) => {
+        const members = await Promise.all(
+          res.data().members.map(async (usr: string) => {
+            const response = await fetch(`/api/users/google/${usr}`);
+            return response.json();
+          })
+        );
+
+        return {
+          ...res.data(),
+          id: res.id,
+          createdAt: fbTimeToDate(res.data().createdAt),
+          messages: res.data().messages.map((msg: MessageType) => ({
+            ...msg,
+            date: fbTimeToDate(msg.date as FirebaseDateType),
+          })) as MessageType[],
+          members,
+        };
+      }),
       query: result?.query,
       error,
       totalDoc,

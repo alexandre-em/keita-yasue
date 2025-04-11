@@ -23,7 +23,7 @@ export default function ChatDestButton({ dest, user }: ChatDestDialogProps) {
 
       if (res.error) throw new Error('Error while checking conversation');
 
-      const conversations = res.result;
+      const conversations = await Promise.all(res.result ?? []);
       let conversationId = crypto.randomUUID();
 
       // Conversation Doesnt exist case
