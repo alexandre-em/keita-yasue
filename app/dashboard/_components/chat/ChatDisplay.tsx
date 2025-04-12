@@ -54,23 +54,28 @@ export function ChatDisplay({ conversation, user }: ChatDisplayProps) {
           author: user,
           content: message,
           date: new Date(),
-        }).then((res) => {
-          if (res.error) callError(res.error);
-          const dest = conversation.members.filter((member) => (member as UserType).id !== user.id)[0] as UserType;
-          sendMessageMail(
-            {
-              email: dest.email,
-              name: dest.name,
-            },
-            {
-              email: user.email,
-              name: user.name,
-            },
-            message
-          ).finally(() => {
+        })
+          .then((res) => {
+            if (res.error) callError(res.error);
+            const dest = conversation.members.filter((member) => (member as UserType).id !== user.id)[0] as UserType;
+            if (dest.role !== 'ADMIN')
+              sendMessageMail(
+                {
+                  email: dest.email,
+                  name: dest.name,
+                },
+                {
+                  email: user.email,
+                  name: user.name,
+                },
+                message
+              ).finally(() => {
+                setMessage('');
+              });
+          })
+          .finally(() => {
             setMessage('');
           });
-        });
       }
     },
     [callError, conversation, message, user]
