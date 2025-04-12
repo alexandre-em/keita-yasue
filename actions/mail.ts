@@ -80,3 +80,43 @@ export const sendReservationMail = async (to: ContactType, data: ReservationData
 
   await mailersend.email.send(emailParams);
 };
+
+type ValidationReservationData = {
+  date: string;
+  time: string;
+  jpTime: string;
+  meetingLink: string;
+};
+
+export const sendValidationReservationMail = async (to: ContactType, data: ValidationReservationData) => {
+  const mailersend = new MailerSend({
+    apiKey: process.env['NEXT_PUBLIC_MAILSENDER_API_TOKEN'] ?? '',
+  });
+  const author = new Sender('contact@alexandre-em.fr', 'Keita Yasue | Contact');
+  const recipients = [new Recipient(to.email, to.name)];
+
+  const personalization = [
+    {
+      email: to.email,
+      data: {
+        name: to.name,
+        date: data.date,
+        time: data.time,
+        jptime: data.jpTime,
+        meetinglink: data.meetingLink,
+        account_name: 'Keita Yasue',
+      },
+    },
+  ];
+
+  const emailParams = new EmailParams()
+    .setFrom(author)
+    .setTo(recipients)
+    .setCc([new Recipient(admin.email, 'Keita Yasue')])
+    .setReplyTo(new Recipient(admin.email, 'Keita Yasue'))
+    .setSubject(`Your lesson booking for the ${data.date} has been validated`)
+    .setTemplateId(process.env['NEXT_PUBLIC_MAILSENDER_VALIDATION_RESERVATION_TEMPLATE_ID'] ?? '')
+    .setPersonalization(personalization);
+
+  await mailersend.email.send(emailParams);
+};

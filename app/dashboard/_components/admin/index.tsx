@@ -11,7 +11,7 @@ type AdminDashboardType = {
 };
 
 export default async function AdminDashboard({ user }: AdminDashboardType) {
-  const reservations = await ReservationServiceIns.getByUser(user.id, { limit: 10000, orderByQuery: 'desc', role: user.role });
+  const reservations = await ReservationServiceIns.getByUser(user.id, { limit: 100, orderByQuery: 'desc', role: user.role });
   const latestRegisteredUsers = await UserServiceIns.getRecentNewUsers();
 
   const reservationSuccess = reservations.data.filter((reservation) => reservation.status === 'VALIDATED');
