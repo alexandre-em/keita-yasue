@@ -46,27 +46,21 @@ export default function UpdateReservationStatus({ id, reservation }: UpdateReser
         });
         const meetJson = await meetResponse.json();
         body['meeting_link'] = meetJson['join_url'];
+
+        await sendValidationReservationMail(
+          { email: student.email, name: student.name },
+          {
+            startDate: reservation.startDate,
+            endDate: reservation.endDate,
+            meetingLink: meetJson['join_url'],
+          }
+        );
       }
 
       const result = await fetch('/api/reservations/update', {
         method: 'POST',
         body: JSON.stringify(body),
       });
-      const start = reservation.startDate;
-      const dateLocale = start.toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const timeLocale = `${start.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })} to ${reservation.endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })}`;
-      const jpTime = `${start.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })} to ${reservation.endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })}`;
-
-      await sendValidationReservationMail(
-        { email: student.email, name: student.name },
-        {
-          date: dateLocale,
-          time: timeLocale,
-          jpTime,
-          meetingLink: body['meeting_link'],
-        }
-      );
 
       if (result.status === 500)
         toast('An error occurred', {
