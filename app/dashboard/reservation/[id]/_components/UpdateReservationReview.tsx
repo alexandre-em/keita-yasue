@@ -21,7 +21,8 @@ type UpdateReservationReviewProps = {
 };
 
 export default function UpdateReservationReview({ id, review }: UpdateReservationReviewProps) {
-  const [newReview, setNewReview] = useState<string | null>(JSON.parse(review ?? ''));
+  console.log({ review });
+  const [newReview, setNewReview] = useState<string | null>(review ? JSON.parse(review) : null);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
