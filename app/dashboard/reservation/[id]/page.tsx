@@ -22,6 +22,9 @@ import CancelReservationDialog from './_components/CancelReservationDialog';
 import UpdateReservationReview from './_components/UpdateReservationReview';
 import UpdateReservationStatus from './_components/UpdateReservationStatus';
 import ChatDestButton from '../../_components/chat/ChatDestButton';
+import VideoConf from '@/components/svg/VideoConf';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default async function ReservationId({ params }: IdParamsType) {
   const { id } = await params;
@@ -65,74 +68,94 @@ export default async function ReservationId({ params }: IdParamsType) {
       </div>
 
       {/* Reservation detail */}
-      <Card className="my-5">
-        <CardHeader>
-          <CardTitle>Reservation&apos;s details</CardTitle>
-          <div className="flex flex-wrap">
-            {statusArray.map((s, i) => (
-              <div key={s} className="flex">
-                <Badge
-                  variant={i > statusLevelIndex ? 'outline' : statusColor[s as StatusType]}
-                  className={i < statusLevelIndex ? 'opacity-40' : ''}
-                >
-                  {s}
-                </Badge>
-                {i === statusArray.length - 1 ? '' : <ChevronRight className="text-zinc-300" />}
-              </div>
-            ))}
-          </div>
-          {reservation.updatedAt && <p className="text-xs italic">Updated the {reservation.updatedAt.toLocaleString()}</p>}
-        </CardHeader>
-        <CardContent>
-          <CardDescription>
-            Reservation for the{' '}
-            <TypographyInlineCode>
-              {reservation.startDate.toLocaleString('en-us', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' })}
-            </TypographyInlineCode>
-          </CardDescription>
-          <div className="flex flex-wrap items-center mt-2">
-            <TypographyLead>
-              {reservation.startDate.toLocaleString('en-us', {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-              })}
-            </TypographyLead>
-            <ChevronRight className="text-zinc-500" />
-            <TypographyLead>
-              {reservation.endDate.toLocaleString('en-us', {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-              })}
-            </TypographyLead>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <div className="flex flex-wrap">
-            {/* Cancel buttons for users */}
-            {user.role === 'USER' && (reservation.status === 'TO_VALIDATE' || reservation.status === 'VALIDATED') && (
-              <CancelReservationDialog id={id} status={reservation.status} />
-            )}
+      <div className="flex flex-wrap w-full">
+        <Card className="my-5 grow">
+          <CardHeader>
+            <CardTitle>Reservation&apos;s details</CardTitle>
+            <div className="flex flex-wrap">
+              {statusArray.map((s, i) => (
+                <div key={s} className="flex">
+                  <Badge
+                    variant={i > statusLevelIndex ? 'outline' : statusColor[s as StatusType]}
+                    className={i < statusLevelIndex ? 'opacity-40' : ''}
+                  >
+                    {s}
+                  </Badge>
+                  {i === statusArray.length - 1 ? '' : <ChevronRight className="text-zinc-300" />}
+                </div>
+              ))}
+            </div>
+            {reservation.updatedAt && <p className="text-xs italic">Updated the {reservation.updatedAt.toLocaleString()}</p>}
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              Reservation for the{' '}
+              <TypographyInlineCode>
+                {reservation.startDate.toLocaleString('en-us', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                  weekday: 'long',
+                })}
+              </TypographyInlineCode>
+            </CardDescription>
+            <div className="flex flex-wrap items-center mt-2">
+              <TypographyLead>
+                {reservation.startDate.toLocaleString('en-us', {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  timeZone: user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+                })}
+              </TypographyLead>
+              <ChevronRight className="text-zinc-500" />
+              <TypographyLead>
+                {reservation.endDate.toLocaleString('en-us', {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  timeZone: user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+                })}
+              </TypographyLead>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <div className="flex flex-wrap">
+              {/* Cancel buttons for users */}
+              {user.role === 'USER' && (reservation.status === 'TO_VALIDATE' || reservation.status === 'VALIDATED') && (
+                <CancelReservationDialog id={id} status={reservation.status} />
+              )}
 
-            {/* Updates buttons for admin */}
-            {user.role === 'ADMIN' && (
-              <>
-                <UpdateReservationStatus id={id} status={reservation.status} />
-                {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
-                  <UpdateReservationReview id={id} review={reservation.studentReview} />
-                )}
-              </>
-            )}
-          </div>
-        </CardFooter>
-      </Card>
+              {/* Updates buttons for admin */}
+              {user.role === 'ADMIN' && (
+                <>
+                  <UpdateReservationStatus id={id} reservation={reservation} />
+                  {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
+                    <UpdateReservationReview id={id} review={reservation.studentReview} />
+                  )}
+                </>
+              )}
+            </div>
+          </CardFooter>
+        </Card>
+        {reservation.meeting_link && (
+          <Card className="m-5">
+            <CardContent>
+              <CardTitle>🧑‍💻 Zoom Meet</CardTitle>
+              <VideoConf width={200} height={200} />
+            </CardContent>
+            <CardFooter>
+              <Link target="_blank" href={reservation.meeting_link}>
+                <Button className="w-full">Join me here</Button>
+              </Link>
+            </CardFooter>
+          </Card>
+        )}
+      </div>
 
       {/* Reservation review */}
       {reservation.studentReview && (
         <Card>
           <CardHeader>
-            <CardTitle className="mb-2">Resume of the lesson</CardTitle>
+            <CardTitle className="mb-2">📝 Resume of the lesson</CardTitle>
             {reservation.studentReview.split('\\n').map((review, i) => (
               <p key={`${review}-${i}`} className="text-muted-foreground text-sm leading-none italic [&:not(:first-child)]:mt-2">
                 {review}

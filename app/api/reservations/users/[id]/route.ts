@@ -12,8 +12,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const role = (searchParams.get('role') as 'ADMIN' | 'USER') ?? 'USER';
   const orderByQuery = (searchParams.get('orderByQuery') as 'asc' | 'desc') ?? 'desc';
 
-  console.log({ orderByQuery });
-
   const reservation = await ReservationServiceIns.getByUser(id, {
     limit,
     page,

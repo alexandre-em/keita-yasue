@@ -14,13 +14,14 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { sendValidationReservationMail } from '@/actions/mail';
 
 type UpdateReservationStatusProps = {
   id: string;
-  status: StatusType;
+  reservation: ReservationType;
 };
 
-export default function UpdateReservationStatus({ id, status }: UpdateReservationStatusProps) {
+export default function UpdateReservationStatus({ id, reservation }: UpdateReservationStatusProps) {
   const [newStatus, setNewStatus] = useState<StatusType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -28,14 +29,44 @@ export default function UpdateReservationStatus({ id, status }: UpdateReservatio
   const handleSubmit = useCallback(async () => {
     if (id && newStatus) {
       setLoading(true);
+      const body: Record<string, string> = {
+        id,
+        status: newStatus,
+        updatedAt: new Date().toISOString(),
+      };
+      const student = reservation.author as UserType;
+
+      if (newStatus === 'VALIDATED') {
+        const meetResponse = await fetch('/api/zoom/meet', {
+          method: 'POST',
+          body: JSON.stringify({
+            start: reservation.startDate,
+            email: student.email,
+          }),
+        });
+        const meetJson = await meetResponse.json();
+        body['meeting_link'] = meetJson['join_url'];
+      }
+
       const result = await fetch('/api/reservations/update', {
         method: 'POST',
-        body: JSON.stringify({
-          id,
-          status: newStatus,
-          updatedAt: new Date(),
-        }),
+        body: JSON.stringify(body),
       });
+      const start = reservation.startDate;
+      const dateLocale = start.toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const timeLocale = `${start.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })} to ${reservation.endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })}`;
+      const jpTime = `${start.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })} to ${reservation.endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })}`;
+
+      await sendValidationReservationMail(
+        { email: student.email, name: student.name },
+        {
+          date: dateLocale,
+          time: timeLocale,
+          jpTime,
+          meetingLink: body['meeting_link'],
+        }
+      );
 
       if (result.status === 500)
         toast('An error occurred', {
@@ -51,7 +82,7 @@ export default function UpdateReservationStatus({ id, status }: UpdateReservatio
       setLoading(false);
       setOpen(false);
     }
-  }, [id, newStatus]);
+  }, [id, newStatus, reservation]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -69,14 +100,16 @@ export default function UpdateReservationStatus({ id, status }: UpdateReservatio
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="TO_VALIDATE">TO_VALIDATE</SelectItem>
-              <SelectItem value="VALIDATED" hidden={status === 'TO_VALIDATE'}>
+              <SelectItem value="TO_VALIDATE" hidden={reservation.status === 'TO_VALIDATE' || reservation.status === 'DONE'}>
+                TO_VALIDATE
+              </SelectItem>
+              <SelectItem value="VALIDATED" hidden={reservation.status === 'VALIDATED'}>
                 VALIDATED
               </SelectItem>
-              <SelectItem value="CANCELLED" hidden={status !== 'TO_CANCEL'}>
+              <SelectItem value="CANCELLED" hidden={reservation.status !== 'TO_CANCEL'}>
                 CANCELLED
               </SelectItem>
-              <SelectItem value="DONE" hidden={status === 'VALIDATED'}>
+              <SelectItem value="DONE" hidden={reservation.status !== 'VALIDATED'}>
                 DONE
               </SelectItem>
             </SelectContent>
