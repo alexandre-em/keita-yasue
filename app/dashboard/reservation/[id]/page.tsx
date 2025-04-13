@@ -25,6 +25,7 @@ import ChatDestButton from '../../_components/chat/ChatDestButton';
 import VideoConf from '@/components/svg/VideoConf';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import MeetingVideo from '@/components/MeetingVideo';
 
 export default async function ReservationId({ params }: IdParamsType) {
   const { id } = await params;
@@ -150,6 +151,8 @@ export default async function ReservationId({ params }: IdParamsType) {
           </Card>
         )}
       </div>
+
+      <MeetingVideo reservation={reservation} user={user} />
 
       {/* Reservation review */}
       {reservation.studentReview && (

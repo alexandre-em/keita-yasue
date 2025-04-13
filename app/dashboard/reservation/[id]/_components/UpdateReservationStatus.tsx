@@ -37,22 +37,22 @@ export default function UpdateReservationStatus({ id, reservation }: UpdateReser
       const student = reservation.author as UserType;
 
       if (newStatus === 'VALIDATED') {
-        const meetResponse = await fetch('/api/zoom/meet', {
-          method: 'POST',
-          body: JSON.stringify({
-            start: reservation.startDate,
-            email: student.email,
-          }),
-        });
-        const meetJson = await meetResponse.json();
-        body['meeting_link'] = meetJson['join_url'];
+        // const meetResponse = await fetch('/api/zoom/meet', {
+        //   method: 'POST',
+        //   body: JSON.stringify({
+        //     start: reservation.startDate,
+        //     email: student.email,
+        //   }),
+        // });
+        // const meetJson = await meetResponse.json();
+        // body['meeting_link'] = meetJson['join_url'];
 
         await sendValidationReservationMail(
           { email: student.email, name: student.name },
           {
             startDate: reservation.startDate,
             endDate: reservation.endDate,
-            meetingLink: meetJson['join_url'],
+            meetingLink: `https://keita-yasue.vercel.app/dashboard/reservation/${id}`,
           }
         );
       }
