@@ -16,6 +16,7 @@ export default function MeetingVideo(props: MeetingVideoProps) {
   const { reservation, user } = props;
   const [jwt, setJwt] = useState<string>();
   const appId = process.env['NEXT_PUBLIC_JITSI_APP_ID'] || '';
+  const pk = process.env['NEXT_PUBLIC_JITSI_PUBLIC_KEY'] || '';
 
   useEffect(() => {
     if (user) {
@@ -24,14 +25,14 @@ export default function MeetingVideo(props: MeetingVideoProps) {
         email: user.email,
         name: user.name,
         appId,
-        kid: appId || '',
+        kid: `${appId}${pk}` || '',
         avatar: user.image || '',
         role: user.role,
       }).then((res) => {
         setJwt(res);
       });
     }
-  }, [user, reservation.id, appId]);
+  }, [user, reservation.id, appId, pk]);
   // const startDate = props.reservation.startDate;
 
   if (
