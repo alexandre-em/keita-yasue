@@ -4,6 +4,10 @@ import { ChatProvider } from './_components/chat/ChatProvider';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/Sidebar';
 import BottomNavBar from '@/components/BottomNavbar';
+import Link from 'next/link';
+import { MessagesSquare } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/components/ui/button';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
@@ -13,6 +17,10 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         <ChatProvider>
           {children}
           <BottomNavBar />
+          <Link href="/dashboard/conversation" className={cn(buttonVariants(), 'z-50 fixed bottom-16 right-10 rounded-full')}>
+            <MessagesSquare />
+            <span>Chat</span>
+          </Link>
         </ChatProvider>
       </SidebarProvider>
       <div className="absolute bg-[#b07edf] w-[100px] h-[100px] top-[-20px] left-72 rounded-full opacity-30 z-[-999]"></div>
