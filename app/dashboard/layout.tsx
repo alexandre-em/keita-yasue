@@ -1,25 +1,18 @@
-import { MessageCircle } from 'lucide-react';
-import Link from 'next/link';
 import React, { PropsWithChildren } from 'react';
 
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-
 import { ChatProvider } from './_components/chat/ChatProvider';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/Sidebar';
+import BottomNavBar from '@/components/BottomNavbar';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
-    <div className="relative w-full min-h-full mt-5" suppressHydrationWarning>
+    <div className="relative w-full min-h-full mt-5 overflow-hidden" suppressHydrationWarning>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarTrigger className="ml-5 md:ml-0 md:invisible" />
         <ChatProvider>
           {children}
-          <Link href="/dashboard/conversation" className={cn(buttonVariants(), 'fixed bottom-5 right-5 rounded-full')}>
-            <MessageCircle />
-          </Link>
+          <BottomNavBar />
         </ChatProvider>
       </SidebarProvider>
       <div className="absolute bg-[#b07edf] w-[100px] h-[100px] top-[-20px] left-72 rounded-full opacity-30 z-[-999]"></div>

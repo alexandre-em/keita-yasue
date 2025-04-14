@@ -17,7 +17,7 @@ import { ArrowRightLeft, Clock, LayoutDashboard, PackageOpen, Sheet, UsersRound 
 import LogOutButton from '@/app/dashboard/_components/LogOutButton';
 import UserCard from './UserCard';
 
-const adminMenu = [
+export const adminMenu = [
   {
     name: 'HOME',
     projects: [
@@ -65,7 +65,7 @@ const adminMenu = [
   },
 ];
 
-const userMenu = [
+export const userMenu = [
   {
     name: 'HOME',
     projects: [
