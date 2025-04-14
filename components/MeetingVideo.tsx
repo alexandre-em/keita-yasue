@@ -35,16 +35,13 @@ export default function MeetingVideo(props: MeetingVideoProps) {
   }, [user, reservation.id, appId, pk]);
   const startDate = props.reservation.startDate;
 
+  if (!props.reservation || !props.reservation.id || !props.user || !props.user.id || !jwt) return null;
+
   if (
-    !props.reservation ||
-    !props.reservation.id ||
-    !props.user ||
-    !props.user.id ||
-    ((props.reservation.author as UserType).id !== props.user.id && props.user.role !== 'ADMIN') ||
-    !jwt ||
     props.reservation.status !== 'VALIDATED' ||
-    isBefore(new Date(new Date(startDate).setMinutes(startDate.getMinutes() - 5)), now) ||
-    isAfter(props.reservation.endDate, now)
+    (((props.reservation.author as UserType).id !== props.user.id || props.user.role !== 'ADMIN') &&
+      (!isBefore(new Date(new Date(startDate).setMinutes(startDate.getMinutes() - 5)), now) ||
+        !isAfter(props.reservation.endDate, now)))
   )
     return null;
 
