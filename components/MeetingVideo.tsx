@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { JaaSMeeting } from '@jitsi/react-sdk';
-// import { isAfter, isBefore } from 'date-fns';
+import { isAfter, isBefore } from 'date-fns';
 import { admin } from '@/constants/admin';
 import { generate } from '@/actions/jitsy';
 
@@ -12,7 +12,7 @@ type MeetingVideoProps = {
 };
 
 export default function MeetingVideo(props: MeetingVideoProps) {
-  // const now = new Date();
+  const now = new Date();
   const { reservation, user } = props;
   const [jwt, setJwt] = useState<string>();
   const appId = process.env['NEXT_PUBLIC_JITSI_APP_ID'] || '';
@@ -33,7 +33,7 @@ export default function MeetingVideo(props: MeetingVideoProps) {
       });
     }
   }, [user, reservation.id, appId, pk]);
-  // const startDate = props.reservation.startDate;
+  const startDate = props.reservation.startDate;
 
   if (
     !props.reservation ||
@@ -41,10 +41,10 @@ export default function MeetingVideo(props: MeetingVideoProps) {
     !props.user ||
     !props.user.id ||
     ((props.reservation.author as UserType).id !== props.user.id && props.user.role !== 'ADMIN') ||
-    !jwt
-    // || props.reservation.status !== 'VALIDATED' ||
-    // isBefore(new Date(new Date(startDate).setMinutes(startDate.getMinutes() - 5)), now) ||
-    // isAfter(props.reservation.endDate, now)
+    !jwt ||
+    props.reservation.status !== 'VALIDATED' ||
+    isBefore(new Date(new Date(startDate).setMinutes(startDate.getMinutes() - 5)), now) ||
+    isAfter(props.reservation.endDate, now)
   )
     return null;
 
