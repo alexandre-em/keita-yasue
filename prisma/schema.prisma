@@ -30,6 +30,7 @@ model User {
   Reservation     Reservation[]
   credit          Int           @default(0)
   timezone        String?
+  Transaction     Transaction[]
 
   @@map("users")
 }
@@ -50,9 +51,33 @@ model Reservation {
   @@map("reservations")
 }
 
+model Transaction {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status      Status   @default(IDLE)
+  packageType Package  @default(ONE_HOUR_PACK) @map("package_type")
+  date        DateTime @map("date")
+  amount      Float    @default(0)
+  currency    String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String   @map("user_id") @db.Uuid
+
+  @@map("transactions")
+}
+
 enum Role {
   USER
   ADMIN
+}
+
+enum Package {
+  ONE_HOUR_PACK
+  FOUR_HOURS_PACK
+  TWELVE_HOURS_PACK
+  TWO_PERSONS_PACK
+  THREE_PERSONS_PACK
+  FOUR_PERSONS_PACK
 }
 
 enum Status {
