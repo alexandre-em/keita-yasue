@@ -6,5 +6,6 @@ type TransactionsListProps = {
 };
 
 export default function TransactionsList({ transactions }: TransactionsListProps) {
+  console.log({ transactions });
   return <div>TransactionsList</div>;
 }

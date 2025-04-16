@@ -12,5 +12,7 @@ export default async function TransactionsPage({ searchParams }: IdParamsType) {
     role: user.role,
   });
 
+  console.log({ transactions });
+
   return <div>TransactionsPage</div>;
 }
