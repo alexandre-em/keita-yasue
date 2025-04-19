@@ -54,9 +54,10 @@ type PackageType =
 type TransactionType = {
   id?: string;
   date: Date;
-  user: UserType | string;
+  user?: UserType | string;
+  userId: string;
   amount: number;
-  currency: number;
+  currency: string;
   packageType: PackageType;
   status: StatusType;
   createdAt: Date;

@@ -9,13 +9,28 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 type LangEnum = 'ja' | 'eu' | 'en';
 
-const prices = [
+export const prices = [
   {
     title: '1 hour lesson',
     price: {
-      ja: `¥3,000`,
-      en: '£20',
-      eu: '25€',
+      ja: {
+        title: `¥3,000`,
+        amount: 3000,
+        currency: 'JPY',
+        packageType: 'ONE_HOUR_PACK',
+      },
+      en: {
+        title: '£20',
+        amount: 2000,
+        currency: 'GBP',
+        packageType: 'ONE_HOUR_PACK',
+      },
+      eu: {
+        title: '25€',
+        amount: 2500,
+        currency: 'EUR',
+        packageType: 'ONE_HOUR_PACK',
+      },
     },
     from: 'from-[#f7fdff]',
     to: 'to-[#f7fdff] text-black',
@@ -23,9 +38,24 @@ const prices = [
   {
     title: '4 hours lessons',
     price: {
-      ja: '¥11,000',
-      en: '£70',
-      eu: '90€',
+      ja: {
+        title: '¥11,000',
+        amount: 11000,
+        currency: 'JPY',
+        packageType: 'FOUR_HOURS_PACK',
+      },
+      en: {
+        title: '£70',
+        amount: 7000,
+        currency: 'GBP',
+        packageType: 'FOUR_HOURS_PACK',
+      },
+      eu: {
+        title: '90€',
+        amount: 9000,
+        currency: 'EUR',
+        packageType: 'FOUR_HOURS_PACK',
+      },
     },
     oldPrice: {
       ja: '¥12,000',
@@ -38,9 +68,24 @@ const prices = [
   {
     title: '12 hours lessons',
     price: {
-      ja: '¥30,000',
-      en: '£200',
-      eu: '250€',
+      ja: {
+        title: '¥30,000',
+        amount: 30000,
+        currency: 'JPY',
+        packageType: 'TWELVE_HOURS_PACK',
+      },
+      en: {
+        title: '£200',
+        amount: 20000,
+        currency: 'GBP',
+        packageType: 'TWELVE_HOURS_PACK',
+      },
+      eu: {
+        title: '250€',
+        amount: 25000,
+        currency: 'EUR',
+        packageType: 'TWELVE_HOURS_PACK',
+      },
     },
     oldPrice: {
       ja: '¥36,800',
@@ -52,23 +97,68 @@ const prices = [
   },
 ];
 
-const group = {
+export const group = {
   title: 'Group lesson',
   prices: {
     two: {
-      ja: '¥2,800',
-      en: '£17',
-      eu: '20€',
+      ja: {
+        title: '¥2,800',
+        amount: 2800,
+        currency: 'JPY',
+        packageType: 'TWO_PERSONS_PACK',
+      },
+      en: {
+        title: '£17',
+        amount: 1700,
+        currency: 'GBP',
+        packageType: 'TWO_PERSONS_PACK',
+      },
+      eu: {
+        title: '20€',
+        amount: 2000,
+        currency: 'EUR',
+        packageType: 'TWO_PERSONS_PACK',
+      },
     },
     three: {
-      ja: '¥2,600',
-      en: '£14.3',
-      eu: '17€',
+      ja: {
+        title: '¥2,600',
+        amount: 2600,
+        currency: 'JPY',
+        packageType: 'THREE_PERSONS_PACK',
+      },
+      en: {
+        title: '£14.3',
+        amount: 1430,
+        currency: 'GBP',
+        packageType: 'THREE_PERSONS_PACK',
+      },
+      eu: {
+        title: '17€',
+        amount: 1700,
+        currency: 'EUR',
+        packageType: 'THREE_PERSONS_PACK',
+      },
     },
     four: {
-      ja: '¥2,500',
-      en: '£13',
-      eu: '15€',
+      ja: {
+        title: '¥2,500',
+        amount: 2500,
+        currency: 'JPY',
+        packageType: 'FOUR_PERSONS_PACK',
+      },
+      en: {
+        title: '£13',
+        amount: 1300,
+        currency: 'GBP',
+        packageType: 'FOUR_PERSONS_PACK',
+      },
+      eu: {
+        title: '15€',
+        amount: 1500,
+        currency: 'EUR',
+        packageType: 'FOUR_PERSONS_PACK',
+      },
     },
   },
   oldPrices: {
@@ -146,11 +236,9 @@ export function GroupPricingCard() {
   const [person, setPerson] = React.useState<'two' | 'three' | 'four'>('two');
 
   React.useEffect(() => {
-    // Only access navigator if in the browser environment
-    if (typeof window !== 'undefined') {
-      const userLocale = navigator.language === 'ja' ? 'ja' : navigator.language === 'en' ? 'en' : 'eu';
-      setLang(userLocale);
-    }
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const userLocale = timeZone === 'Asia/Tokyo' ? 'ja' : timeZone === 'Europe/London' ? 'en' : 'eu';
+    setLang(userLocale);
   }, []);
 
   return (
@@ -174,7 +262,7 @@ export function GroupPricingCard() {
         </Select>
         <div className="flex flex-col justify-center items-center my-20">
           <div className="flex flex-col items-center">
-            <div className="text-5xl font-bold">{group.prices[person][lang]}</div>
+            <div className="text-5xl font-bold">{group.prices[person][lang].title}</div>
             <TypographySmall>/persons</TypographySmall>
           </div>
         </div>
@@ -202,11 +290,9 @@ export default function PricingCardCarousel() {
   const [lang, setLang] = React.useState<LangEnum>('en'); // Default to 'en' or another default locale
 
   React.useEffect(() => {
-    // Only access navigator if in the browser environment
-    if (typeof window !== 'undefined') {
-      const userLocale = navigator.language === 'ja' ? 'ja' : navigator.language === 'en' ? 'en' : 'eu';
-      setLang(userLocale);
-    }
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const userLocale = timeZone === 'Asia/Tokyo' ? 'ja' : timeZone === 'Europe/London' ? 'en' : 'eu';
+    setLang(userLocale);
   }, []);
 
   return (
@@ -216,7 +302,7 @@ export default function PricingCardCarousel() {
           <PricingCard
             title={price.title}
             oldPrice={price.oldPrice ? price.oldPrice[lang] : undefined}
-            price={price.price[lang]}
+            price={price.price[lang].title}
             from={price.from}
             to={price.to}
           />

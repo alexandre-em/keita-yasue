@@ -1,15 +1,17 @@
-import { TypographyBlockquote, TypographyH1, TypographyH3, TypographyMuted } from '@/components/typography';
+import { TypographyBlockquote, TypographyH1, TypographyH3 } from '@/components/typography';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import CreateReservation from '../CreateReservation';
 import { getUserDetail } from '@/constants/cookies';
 import { ReservationServiceIns } from '@/services';
 import NumberCard from '@/components/NumberCard';
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ReservationList from '../ReservationList';
 import Link from 'next/link';
 import { isBefore } from 'date-fns';
+import { admin } from '@/constants/admin';
+import AddCreditCard from '../AddCredit';
 
 export default async function UserDashboard() {
   const user = await getUserDetail();
@@ -38,8 +40,7 @@ export default async function UserDashboard() {
     <div className="flex flex-col m-5 mt-0 w-full overflow-x-hidden">
       <TypographyH1>Dashboard</TypographyH1>
       <Separator className="my-2" />
-      <div className="flex overflow-auto mt-2">
-        <CreateReservation user={user} />
+      <div className="flex overflow-auto mt-2 w-auto">
         {nextLesson && (
           <Card className="min-w-[200px] w-[250px] mx-2">
             <CardContent className="flex-col items-start gap-1 text-sm">
@@ -73,6 +74,9 @@ export default async function UserDashboard() {
             </CardFooter>
           </Card>
         )}
+        <AddCreditCard user={user} />
+        <Separator orientation="vertical" className="mx-1" />
+        <CreateReservation user={user} />
         {highlights.map((highlight) => (
           <NumberCard data={highlight} key={JSON.stringify(highlight)} />
         ))}
@@ -81,35 +85,42 @@ export default async function UserDashboard() {
       <div className="h-[2rem]" />
       {lastLesson?.studentReview && (
         <>
-          <TypographyH3>Last lesson&apos;s review</TypographyH3>
-          <Card className="mt-4">
-            <CardContent>
-              <CardTitle>Keita Yasue :</CardTitle>
-              <TypographyBlockquote>{lastLesson.studentReview}</TypographyBlockquote>
-              <div className="h-[0.5rem]" />
-              <div className="italic">
-                <TypographyMuted>
-                  updated the :
-                  {lastLesson.updatedAt.toLocaleDateString('en-En', {
-                    weekday: 'long',
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </TypographyMuted>
-              </div>
-            </CardContent>
+          <div className="flex justify-between">
+            <TypographyH3>Last lesson&apos;s review</TypographyH3>
+            <Link href={`/dashboard/reservation/${lastLesson.id}`}>
+              <Button variant="outline">Read more</Button>
+            </Link>
+          </div>
+          <div className="h-[0.5rem]" />
+          <Card>
+            <CardHeader>
+              <CardTitle>{admin.name} :</CardTitle>
+              <TypographyBlockquote>
+                {lastLesson.studentReview
+                  .split('\\n')
+                  .filter((_, i) => i < 5)
+                  .map((review, i) => (
+                    <p
+                      key={`${review}-${i}`}
+                      className="text-muted-foreground text-sm leading-none italic [&:not(:first-child)]:mt-2"
+                    >
+                      {review}
+                    </p>
+                  ))}
+                ...
+              </TypographyBlockquote>
+            </CardHeader>
           </Card>
         </>
       )}
       <div className="text-primary my-10">
         <div className="flex justify-between">
-          <TypographyH3>Validated lessons</TypographyH3>
+          <TypographyH3>Lessons done</TypographyH3>
           <Link href="/dashboard/reservation">
             <Button variant="outline">View all</Button>
           </Link>
         </div>
-        <ReservationList user={user} data={validatedLessons.filter((_, i) => i !== 5)} />
+        <ReservationList user={user} data={doneLessons.filter((_, i) => i !== 5)} />
       </div>
     </div>
   );
