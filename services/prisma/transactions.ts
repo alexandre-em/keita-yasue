@@ -72,14 +72,14 @@ export class TransactionsService {
   createOne(data: TransactionType) {
     return prisma.transaction.create({
       data: {
-        date: data.date,
+        date: new Date(data.date),
         amount: data.amount,
-        currency: data.currency.toString(),
+        currency: data.currency,
         status: data.status,
         packageType: data.packageType,
         createdAt: new Date(),
         updatedAt: new Date(),
-        userId: data.user! as string,
+        userId: data.userId! as string,
       },
     });
   }
