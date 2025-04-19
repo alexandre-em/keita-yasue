@@ -29,7 +29,7 @@ export class TransactionsService {
 
   async getByUser(id: string, options: PrismaPaginationOptionsType) {
     const { cursor, limit, status, orderByQuery = 'desc', role } = options;
-    const where: Record<string, string> = role === 'ADMIN' ? {} : { authorId: id };
+    const where: Record<string, string> = role === 'ADMIN' ? {} : { userId: id };
 
     const nextCursor = cursor
       ? {
@@ -45,6 +45,8 @@ export class TransactionsService {
     const totalElement = 0;
 
     // const selectedPage = page * limit >= totalElement ? Math.max(totalElement - limit, 0) : page * limit < 0 ? 0 : options.page;
+    //
+    console.log({ where });
 
     const results = await prisma.transaction.findMany({
       skip: cursor ? 1 : 0,
