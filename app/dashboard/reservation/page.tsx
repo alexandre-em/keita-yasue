@@ -5,7 +5,7 @@ import ReservationList from '../_components/ReservationList';
 import { Separator } from '@/components/ui/separator';
 import { TypographyH2, TypographyMuted } from '@/components/typography';
 import { ReservationServiceIns } from '@/services';
-// import { Button } from '@/components/ui/button';
+import { CreateReservation } from '../_components/CreateReservation';
 // import LimitSelect from '@/components/LimitSelect';
 // import Link from 'next/link';
 // import { Skeleton } from '@/components/ui/skeleton';
@@ -22,8 +22,13 @@ export default async function ReservationPage({ searchParams }: IdParamsType) {
 
   return (
     <div className="flex flex-col m-5 mt-0 w-full h-full overflow-x-hidden">
-      <TypographyH2>Lesson booking list</TypographyH2>
-      <TypographyMuted>You can find all of your booking here</TypographyMuted>
+      <div className="flex justify-between items-center">
+        <div>
+          <TypographyH2>Lesson booking list</TypographyH2>
+          <TypographyMuted>You can find all of your booking here</TypographyMuted>
+        </div>
+        <CreateReservation user={user} />
+      </div>
       <Separator className="my-2" />
       <ReservationList user={user} data={reservations.data} />
       {/* <div className="flex items-center justify-between space-x-2 py-4"> */}

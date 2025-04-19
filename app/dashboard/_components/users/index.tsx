@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import ReservationList from '../ReservationList';
 import Link from 'next/link';
+import { isBefore } from 'date-fns';
 
 export default async function UserDashboard() {
   const user = await getUserDetail();
@@ -30,7 +31,7 @@ export default async function UserDashboard() {
   const doneLessons = reservations.data.filter((res) => res.status === 'DONE');
   const lastLesson = doneLessons.length > 0 ? doneLessons[0] : null;
 
-  const validatedLessons = reservations.data.filter((res) => res.status === 'VALIDATED');
+  const validatedLessons = reservations.data.filter((res) => res.status === 'VALIDATED' && isBefore(new Date(), res.startDate));
   const nextLesson = validatedLessons.length > 0 ? validatedLessons[0] : null;
 
   return (
