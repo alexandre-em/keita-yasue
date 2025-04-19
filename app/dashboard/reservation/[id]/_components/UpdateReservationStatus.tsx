@@ -19,9 +19,10 @@ import { sendValidationReservationMail } from '@/actions/mail';
 type UpdateReservationStatusProps = {
   id: string;
   reservation: ReservationType;
+  user: UserType;
 };
 
-export default function UpdateReservationStatus({ id, reservation }: UpdateReservationStatusProps) {
+export default function UpdateReservationStatus({ id, reservation, user }: UpdateReservationStatusProps) {
   const [newStatus, setNewStatus] = useState<StatusType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -100,7 +101,7 @@ export default function UpdateReservationStatus({ id, reservation }: UpdateReser
               <SelectItem value="VALIDATED" hidden={reservation.status === 'VALIDATED'}>
                 VALIDATED
               </SelectItem>
-              <SelectItem value="CANCELLED" hidden={reservation.status !== 'TO_CANCEL'}>
+              <SelectItem value="CANCELLED" hidden={reservation.status !== 'TO_CANCEL' && user.role === 'USER'}>
                 CANCELLED
               </SelectItem>
               <SelectItem value="DONE" hidden={reservation.status !== 'VALIDATED'}>

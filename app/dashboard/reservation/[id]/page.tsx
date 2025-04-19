@@ -128,7 +128,7 @@ export default async function ReservationId({ params }: IdParamsType) {
               {/* Updates buttons for admin */}
               {user.role === 'ADMIN' && (
                 <>
-                  <UpdateReservationStatus id={id} reservation={reservation} />
+                  <UpdateReservationStatus id={id} reservation={reservation} user={user} />
                   {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
                     <UpdateReservationReview id={id} review={reservation.studentReview} />
                   )}
