@@ -1,19 +1,32 @@
 import { TypographyH1, TypographyH3 } from '@/components/typography';
 import { Separator } from '@/components/ui/separator';
-import { ReservationServiceIns, UserServiceIns } from '@/services';
+import { ReservationServiceIns, TransactionsServiceIns, UserServiceIns } from '@/services';
 import React from 'react';
 import ReservationList from '../ReservationList';
 import UserList from '../UserList';
 import NumberCard from '@/components/NumberCard';
 import { isBefore } from 'date-fns';
+import TransactionsList from '../../transactions/_components/TransactionsList';
 
 type AdminDashboardType = {
   user: UserType;
 };
 
 export default async function AdminDashboard({ user }: AdminDashboardType) {
-  const reservations = await ReservationServiceIns.getByUser(user.id, { limit: 100, orderByQuery: 'desc', role: user.role });
-  const latestRegisteredUsers = await UserServiceIns.getRecentNewUsers();
+  const reservationsPromise = ReservationServiceIns.getByUser(user.id, { limit: 100, orderByQuery: 'desc', role: user.role });
+  const latestRegisteredUsersPromise = UserServiceIns.getRecentNewUsers();
+  const pendingTransactionsPromise = TransactionsServiceIns.getByUser(user.id, {
+    limit: 100,
+    orderByQuery: 'desc',
+    role: user.role,
+    status: 'PENDING',
+  });
+
+  const [reservations, latestRegisteredUsers, pendingTransactions] = await Promise.all([
+    reservationsPromise,
+    latestRegisteredUsersPromise,
+    pendingTransactionsPromise,
+  ]);
 
   const reservationSuccess = reservations.data.filter(
     (reservation) => reservation.status === 'VALIDATED' && isBefore(new Date(), reservation.startDate)
@@ -60,12 +73,16 @@ export default async function AdminDashboard({ user }: AdminDashboardType) {
 
       <div className="flex flex-wrap">
         <div className="min-w-[150px] max-w-[500px] text-primary m-5">
-          <TypographyH3>📅 Next lesssons</TypographyH3>
-          <ReservationList data={reservationSuccess} user={user} />
+          <TypographyH3>⚠️ Transaction to validate</TypographyH3>
+          <TransactionsList data={pendingTransactions.data} user={user} />
         </div>
         <div className="min-w-[150px] max-w-[500px] text-primary m-5">
           <TypographyH3>⚠️ Latest booking to validate</TypographyH3>
           <ReservationList data={reservationToValidate} user={user} />
+        </div>
+        <div className="min-w-[150px] max-w-[500px] text-primary m-5">
+          <TypographyH3>📅 Next lesssons</TypographyH3>
+          <ReservationList data={reservationSuccess} user={user} />
         </div>
         <div className="min-w-[150px] max-w-[500px] text-primary m-5">
           <TypographyH3>🆕 Users registered the last 30 days</TypographyH3>
