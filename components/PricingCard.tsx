@@ -15,7 +15,7 @@ export const prices = [
     price: {
       ja: {
         title: `¥3,000`,
-        amount: 3000,
+        amount: 300000,
         currency: 'JPY',
         packageType: 'ONE_HOUR_PACK',
       },
@@ -40,7 +40,7 @@ export const prices = [
     price: {
       ja: {
         title: '¥11,000',
-        amount: 11000,
+        amount: 1100000,
         currency: 'JPY',
         packageType: 'FOUR_HOURS_PACK',
       },
@@ -70,7 +70,7 @@ export const prices = [
     price: {
       ja: {
         title: '¥30,000',
-        amount: 30000,
+        amount: 3000000,
         currency: 'JPY',
         packageType: 'TWELVE_HOURS_PACK',
       },
@@ -103,7 +103,7 @@ export const group = {
     two: {
       ja: {
         title: '¥2,800',
-        amount: 2800,
+        amount: 280000,
         currency: 'JPY',
         packageType: 'TWO_PERSONS_PACK',
       },
@@ -123,7 +123,7 @@ export const group = {
     three: {
       ja: {
         title: '¥2,600',
-        amount: 2600,
+        amount: 260000,
         currency: 'JPY',
         packageType: 'THREE_PERSONS_PACK',
       },
@@ -143,7 +143,7 @@ export const group = {
     four: {
       ja: {
         title: '¥2,500',
-        amount: 2500,
+        amount: 250000,
         currency: 'JPY',
         packageType: 'FOUR_PERSONS_PACK',
       },

@@ -88,10 +88,7 @@ export class TransactionsService {
 
   updateOne(id: string, data: Partial<Omit<TransactionType, 'user'>>) {
     return prisma.transaction.update({
-      data: {
-        ...data,
-        currency: data.currency ? data.currency.toString() : undefined,
-      },
+      data,
       where: {
         id,
       },
@@ -99,10 +96,7 @@ export class TransactionsService {
   }
 
   deleteOne(id: string) {
-    return prisma.transaction.update({
-      data: {
-        updatedAt: new Date(),
-      },
+    return prisma.transaction.delete({
       where: {
         id,
       },

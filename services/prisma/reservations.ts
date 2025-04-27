@@ -107,10 +107,7 @@ export class ReservationsService {
   }
 
   deleteOne(id: string) {
-    return prisma.reservation.update({
-      data: {
-        updatedAt: new Date(),
-      },
+    return prisma.reservation.delete({
       where: {
         id,
       },

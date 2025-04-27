@@ -26,6 +26,7 @@ import VideoConf from '@/components/svg/VideoConf';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import MeetingVideo from '@/components/MeetingVideo';
+import { isBefore } from 'date-fns';
 
 export default async function ReservationId({ params }: IdParamsType) {
   const { id } = await params;
@@ -121,9 +122,11 @@ export default async function ReservationId({ params }: IdParamsType) {
           <CardFooter>
             <div className="flex flex-wrap">
               {/* Cancel buttons for users */}
-              {user.role === 'USER' && (reservation.status === 'TO_VALIDATE' || reservation.status === 'VALIDATED') && (
-                <CancelReservationDialog id={id} status={reservation.status} />
-              )}
+              {user.role === 'USER' &&
+                (reservation.status === 'TO_VALIDATE' || reservation.status === 'VALIDATED') &&
+                isBefore(new Date(), reservation.startDate) && (
+                  <CancelReservationDialog id={id} userId={user.id} status={reservation.status} />
+                )}
 
               {/* Updates buttons for admin */}
               {user.role === 'ADMIN' && (

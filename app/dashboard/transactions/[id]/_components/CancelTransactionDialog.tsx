@@ -13,15 +13,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { redirect } from 'next/navigation';
+import { TransactionsServiceIns } from '@/services';
 
-type CancelReservationDialogProps = {
+type CancelTransactionDialogProps = {
   id: string;
-  userId: string;
   status: StatusType;
 };
 
-export default function CancelReservationDialog({ id, status }: CancelReservationDialogProps) {
+export default function CancelTransactionDialog({ id, status }: CancelTransactionDialogProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = useCallback(() => {
@@ -31,41 +30,34 @@ export default function CancelReservationDialog({ id, status }: CancelReservatio
       // Otherwise, it delete it definitively
       const cancelPromise =
         status === 'VALIDATED'
-          ? fetch(`/api/reservations/update`, {
-              method: 'POST',
-              body: JSON.stringify({
-                id,
-                status: 'TO_CANCEL',
-                updatedAt: new Date(),
-              }),
+          ? TransactionsServiceIns.updateOne(id, {
+              status: 'TO_CANCEL',
+              updatedAt: new Date(),
             })
-          : fetch(`/api/reservations/id/${id}`, { method: 'DELETE' });
+          : TransactionsServiceIns.deleteOne(id);
 
       cancelPromise
-        .then((res) => {
-          res.json().then((data) => {
-            if (data) {
-              toast('Status updated', {
-                description: id,
-                icon: <CircleCheckBig />,
-              });
-            } else {
-              toast('An error occurred', {
-                description: 'Could not updated the status',
-                icon: <CircleX />,
-              });
-            }
-          });
+        .then((data) => {
+          if (data) {
+            toast('Status updated', {
+              description: id,
+              icon: <CircleCheckBig />,
+            });
+          } else {
+            toast('An error occurred', {
+              description: 'Could not cancelled the transaction. Please try again later',
+              icon: <CircleX />,
+            });
+          }
         })
         .catch(() => {
           toast('An error occurred', {
-            description: 'Could not updated the status',
+            description: 'Could not cancelled the transaction. Please try again later',
             icon: <CircleX />,
           });
         })
         .finally(() => {
           setLoading(false);
-          redirect('/dashboard/reservation');
         });
     }
   }, [id, status]);
@@ -75,14 +67,14 @@ export default function CancelReservationDialog({ id, status }: CancelReservatio
       <DialogTrigger asChild>
         <Button className="my-1" variant="destructive">
           <Ban className="mr-2" />
-          Cancel my reservation
+          Cancel my transaction
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Cancel my reservation</DialogTitle>
+          <DialogTitle>Cancel my transaction</DialogTitle>
         </DialogHeader>
-        <DialogDescription>Are you sure to cancel your reservation ?</DialogDescription>
+        <DialogDescription>Are you sure to cancel your transaction ?</DialogDescription>
         <DialogFooter>
           <Button onClick={handleSubmit} disabled={loading} variant="destructive">
             {loading ? (

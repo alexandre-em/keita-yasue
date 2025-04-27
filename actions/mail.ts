@@ -56,7 +56,7 @@ export const sendMessageMail = async (to: ContactType, from: ContactType, messag
   const mailersend = new MailerSend({
     apiKey: process.env['NEXT_PUBLIC_MAILSENDER_API_TOKEN'] ?? '',
   });
-  const author = new Sender('contact@alexandre-em.fr', 'Keita Yasue | Contact');
+  const author = new Sender('contact@keita-yasue.uk', 'Keita Yasue | Contact');
   const recipients = [new Recipient(to.email, to.name)];
 
   const personalization = [
@@ -97,7 +97,7 @@ export const sendReservationMail = async (to: ContactType, data: ReservationData
   const mailersend = new MailerSend({
     apiKey: process.env['NEXT_PUBLIC_MAILSENDER_API_TOKEN'] ?? '',
   });
-  const author = new Sender('contact@alexandre-em.fr', 'Keita Yasue | Contact');
+  const author = new Sender('contact@keita-yasue.uk', 'Keita Yasue | Contact');
   const recipients = [new Recipient(to.email, to.name)];
 
   const personalization = [
@@ -116,8 +116,8 @@ export const sendReservationMail = async (to: ContactType, data: ReservationData
   const emailParams = new EmailParams()
     .setFrom(author)
     .setTo(recipients)
-    .setCc([new Recipient(admin.email, 'Keita Yasue')])
-    .setReplyTo(new Recipient(admin.email, 'Keita Yasue'))
+    .setCc([new Recipient(admin.email, admin.name)])
+    .setReplyTo(new Recipient(admin.email, admin.name))
     .setSubject(`New reservation with Keita the ${data.date}`)
     .setTemplateId(process.env['NEXT_PUBLIC_MAILSENDER_RESERVATION_TEMPLATE_ID'] ?? '')
     .setPersonalization(personalization);
@@ -135,7 +135,7 @@ export const sendValidationReservationMail = async (to: ContactType, data: Valid
   const mailersend = new MailerSend({
     apiKey: process.env['NEXT_PUBLIC_MAILSENDER_API_TOKEN'] ?? '',
   });
-  const author = new Sender('contact@alexandre-em.fr', 'Keita Yasue | Contact');
+  const author = new Sender('contact@keita-yasue.uk', 'Keita Yasue | Contact');
   const recipients = [new Recipient(to.email, to.name)];
   const { startDate, endDate } = data;
 

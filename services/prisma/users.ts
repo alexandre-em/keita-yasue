@@ -52,6 +52,32 @@ export class UserService {
     });
   }
 
+  increaseCredit(id: string, credit: number) {
+    return prisma.user.update({
+      data: {
+        credit: {
+          increment: credit,
+        },
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  decreaseCredit(id: string, credit: number) {
+    return prisma.user.update({
+      data: {
+        credit: {
+          decrement: credit,
+        },
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
   deleteOne(id: string) {
     return prisma.user.update({
       data: {
