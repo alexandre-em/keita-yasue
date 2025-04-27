@@ -17,6 +17,8 @@ import { TypographyBold, TypographyLead, TypographyMuted } from '@/components/ty
 import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
 import PaymentSvg from '@/components/svg/Payment';
+import { sendMessageMail } from '@/actions/mail';
+import { admin } from '@/constants/admin';
 
 type CreateReservationProps = {
   user: UserType;
@@ -65,6 +67,12 @@ export function CreditDialog({ user }: CreditDialogProps) {
           } satisfies Omit<TransactionType, 'id'>),
         });
 
+        await sendMessageMail(
+          admin,
+          user,
+          `${user.name} has payed for ${selectedPlan.packageType} package (${(selectedPlan.amount ?? 0) / 100} ${selectedPlan.currency}). Please check your revolut account and validate the transaction, so ${user.name} can have his credits to be able to book a lesson.`
+        );
+
         window.open('https://revolut.me/keitadzx', '_blank')!.focus();
 
         toast('Success !', {
@@ -82,7 +90,7 @@ export function CreditDialog({ user }: CreditDialogProps) {
         setOpen(false);
       }
     }
-  }, [selectedPlan, user.id]);
+  }, [selectedPlan, user]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -95,9 +103,12 @@ export function CreditDialog({ user }: CreditDialogProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add credit to your account</DialogTitle>
-          <DialogDescription>Select the package you want. 1 credit = 1 hour of reservation</DialogDescription>
-          <DialogDescription>
-            Your actual credit: <TypographyBold>{user.credit ?? 0}</TypographyBold>
+          <DialogDescription>Select the package you want. 1 credit = 1 hour of reservation.</DialogDescription>
+          <DialogDescription className="flex justify-between items-center">
+            💰 Your actual credit :{' '}
+            <TypographyLead>
+              <div className="text-[#ff920f] font-extrabold">{user.credit ?? 0}</div>
+            </TypographyLead>
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4">

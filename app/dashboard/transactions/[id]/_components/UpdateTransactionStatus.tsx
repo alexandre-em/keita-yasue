@@ -14,15 +14,17 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { sendValidationReservationMail } from '@/actions/mail';
+import { sendMessageMail } from '@/actions/mail';
+import { admin } from '@/constants/admin';
+import { creditPackage } from '@/constants';
 
-type UpdateReservationStatusProps = {
+type UpdateTransactionStatusProps = {
   id: string;
-  reservation: ReservationType;
+  transaction: TransactionType;
   user: UserType;
 };
 
-export default function UpdateReservationStatus({ id, reservation, user }: UpdateReservationStatusProps) {
+export default function UpdateTransactionStatus({ id, transaction, user }: UpdateTransactionStatusProps) {
   const [newStatus, setNewStatus] = useState<StatusType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -35,16 +37,16 @@ export default function UpdateReservationStatus({ id, reservation, user }: Updat
         status: newStatus,
         updatedAt: new Date().toISOString(),
       };
-      const student = reservation.author as UserType;
+      const student = transaction.user as UserType;
 
-      const result = await fetch('/api/reservations/update', {
+      const result = await fetch('/api/transactions/update', {
         method: 'POST',
         body: JSON.stringify(body),
       });
 
       if (result.status === 500)
         toast('An error occurred', {
-          description: 'Could not updated the status of the transaction',
+          description: 'Could not updated the status',
           icon: <CircleX />,
         });
       else
@@ -54,41 +56,27 @@ export default function UpdateReservationStatus({ id, reservation, user }: Updat
         });
 
       if (newStatus === 'VALIDATED') {
-        // const meetResponse = await fetch('/api/zoom/meet', {
-        //   method: 'POST',
-        //   body: JSON.stringify({
-        //     start: reservation.startDate,
-        //     email: student.email,
-        //   }),
-        // });
-        // const meetJson = await meetResponse.json();
-        // body['meeting_link'] = meetJson['join_url'];
         await fetch('/api/users/credit', {
           method: 'POST',
-          body: JSON.stringify({ id: student.id, credit: 1, type: 'decrease' }),
+          body: JSON.stringify({ id: student.id, credit: creditPackage[transaction.packageType], type: 'increase' }),
         });
-
-        await sendValidationReservationMail(
-          { email: student.email, name: student.name },
+        await sendMessageMail(
           {
-            startDate: reservation.startDate,
-            endDate: reservation.endDate,
-            meetingLink: `https://keita-yasue.uk/dashboard/reservation/${id}`,
-          }
+            email: student.email,
+            name: student.name,
+          },
+          {
+            email: admin.email,
+            name: admin.name,
+          },
+          `Your transaction has been validated.\n You can find your transaction history from the dashboard and use them to book lessons.\n Thank you for your purchase !`
         );
-      }
-
-      if (newStatus === 'CANCELLED') {
-        await fetch('/api/users/credit', {
-          method: 'POST',
-          body: JSON.stringify({ id: student.id, credit: 1, type: 'increase' }),
-        });
       }
 
       setLoading(false);
       setOpen(false);
     }
-  }, [id, newStatus, reservation]);
+  }, [id, newStatus, transaction]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -106,16 +94,16 @@ export default function UpdateReservationStatus({ id, reservation, user }: Updat
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="TO_VALIDATE" hidden={reservation.status === 'TO_VALIDATE' || reservation.status === 'DONE'}>
+              <SelectItem value="TO_VALIDATE" hidden={transaction.status === 'TO_VALIDATE' || transaction.status === 'DONE'}>
                 TO_VALIDATE
               </SelectItem>
-              <SelectItem value="VALIDATED" hidden={reservation.status === 'VALIDATED'}>
+              <SelectItem value="VALIDATED" hidden={transaction.status === 'VALIDATED'}>
                 VALIDATED
               </SelectItem>
-              <SelectItem value="CANCELLED" hidden={reservation.status !== 'TO_CANCEL' && user.role === 'USER'}>
+              <SelectItem value="CANCELLED" hidden={transaction.status !== 'TO_CANCEL' && user.role === 'USER'}>
                 CANCELLED
               </SelectItem>
-              <SelectItem value="DONE" hidden={reservation.status !== 'VALIDATED'}>
+              <SelectItem value="DONE" hidden={transaction.status !== 'VALIDATED'}>
                 DONE
               </SelectItem>
             </SelectContent>

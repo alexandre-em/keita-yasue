@@ -194,9 +194,25 @@ export function CreateReservation({ user }: CreateReservationProps) {
           <div className="w-full grid gap-4">
             <DateRangeSelect onSelect={setSelectedRange} ranges={dateRanges} />
           </div>
+          {(user.credit ?? 0) < 1 && (
+            <div className="flex justify-center">
+              <TypographySmall>
+                <div className="text-red-700">You do not have sufficient credit</div>
+              </TypographySmall>
+            </div>
+          )}
         </div>
         <DialogFooter>
-          <Button onClick={createReservation}>{loading ? <Loader className="animate-spin" /> : 'Confirm your booking'}</Button>
+          <Button onClick={createReservation} disabled={!selectedRange || loading || (user.credit ?? 0) < 1}>
+            {loading ? (
+              <div className="flex items-center">
+                <Loader className="animate-spin mr-2" />
+                Submitting...
+              </div>
+            ) : (
+              'Confirm your booking'
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

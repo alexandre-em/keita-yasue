@@ -42,11 +42,12 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
           description: 'Could not updated the review',
           icon: <CircleX />,
         });
-      else
+      else {
         toast("Review's updated", {
           description: id,
           icon: <CircleCheckBig />,
         });
+      }
 
       setLoading(false);
       setOpen(false);

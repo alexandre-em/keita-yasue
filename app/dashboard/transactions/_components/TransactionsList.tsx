@@ -33,7 +33,7 @@ export default function TransactionsList({ data, user }: TransactionsListProps) 
             const timeZone = user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 
             return (
-              <Link legacyBehavior key={`transaction-n${transaction.id}`} href={`/dashboard/transaction/${transaction.id}`}>
+              <Link legacyBehavior key={`transaction-n${transaction.id}`} href={`/dashboard/transactions/${transaction.id}`}>
                 <TableRow className="cursor-pointer">
                   <TableCell>{transaction.id?.split('-')[0]}</TableCell>
                   <TableCell className="font-medium flex flex-wrap items-center">

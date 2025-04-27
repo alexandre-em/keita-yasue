@@ -40,8 +40,8 @@ export default function MeetingVideo(props: MeetingVideoProps) {
   if (
     props.reservation.status !== 'VALIDATED' ||
     (((props.reservation.author as UserType).id !== props.user.id || props.user.role !== 'ADMIN') &&
-      (!isBefore(new Date(new Date(startDate).setMinutes(startDate.getMinutes() - 5)), now) ||
-        !isAfter(props.reservation.endDate, now)))
+      isBefore(now, new Date(new Date(startDate).setMinutes(startDate.getMinutes() - 5)))) ||
+    isAfter(now, props.reservation.endDate)
   )
     return null;
 
