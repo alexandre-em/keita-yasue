@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
 import Booking from '@/components/svg/Booking';
 import { SelectIcon } from '@radix-ui/react-select';
+import { redirect } from 'next/navigation';
 
 type CreateReservationProps = {
   user: UserType;
@@ -43,11 +44,7 @@ export default function CreateReservationCard({ user }: CreateReservationProps) 
 }
 
 export function CreateReservation({ user }: CreateReservationProps) {
-  const [date, setDate] = useState<Date>(new Date());
-  const [dateRanges, setDateRanges] = useState<Date[] | undefined>();
-  const [selectedRange, setSelectedRange] = useState<Date | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(false);
 
   const sendConfirmationMail = useCallback(
     async (date: string, time: string, jpTime: string) => {
@@ -68,58 +65,85 @@ export function CreateReservation({ user }: CreateReservationProps) {
     [user]
   );
 
-  const createReservation = useCallback(async () => {
-    if (selectedRange) {
-      setLoading(true);
-      const endDate = new Date(selectedRange);
-      endDate.setHours(selectedRange.getHours() + 1, 0, 0, 0);
-      const isDateValid = isAfter(selectedRange, new Date());
+  const createReservation = useCallback(
+    async (selectedRange?: Date) => {
+      if (selectedRange) {
+        setLoading(true);
+        const endDate = new Date(selectedRange);
+        endDate.setHours(selectedRange.getHours() + 1, 0, 0, 0);
+        const isDateValid = isAfter(selectedRange, new Date());
 
-      if (isDateValid && user && user.id) {
-        try {
-          const res = await fetch('/api/reservations', {
-            method: 'POST',
-            body: JSON.stringify({
-              startDate: selectedRange,
-              endDate,
-              author: user.id,
-              status: 'TO_VALIDATE',
-              createdAt: new Date(),
-            } satisfies Omit<ReservationType, 'id'>),
-          });
+        if (isDateValid && user && user.id) {
+          try {
+            const res = await fetch('/api/reservations', {
+              method: 'POST',
+              body: JSON.stringify({
+                startDate: selectedRange,
+                endDate,
+                author: user.id,
+                status: 'TO_VALIDATE',
+                update: null,
+                createdAt: new Date(),
+              } satisfies Omit<ReservationType, 'id'>),
+            });
 
-          if (res.status !== 200) throw new Error('There is already a course booked for this hour.Please try another one.');
+            if (res.status !== 200) throw new Error('There is already a course booked for this hour.Please try another one.');
 
-          // Send a confirmation mail
-          const dateLocale = selectedRange.toLocaleString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-          const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-          const timeLocale = `${selectedRange.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })} to ${endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })}`;
-          const jpTime = `${selectedRange.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })} to ${endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })}`;
-          await sendConfirmationMail(dateLocale, timeLocale, jpTime);
+            // Send a confirmation mail
+            const dateLocale = selectedRange.toLocaleString('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            });
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const timeLocale = `${selectedRange.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })} to ${endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone })}`;
+            const jpTime = `${selectedRange.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })} to ${endDate.toLocaleString('en-US', { hour: '2-digit', minute: 'numeric', timeZone: 'Asia/Tokyo' })}`;
+            await sendConfirmationMail(dateLocale, timeLocale, jpTime);
 
-          toast('Success !', {
-            description: 'Reservation created. A confirmation mail has been sent',
-            icon: <CircleCheckBig />,
-          });
-        } catch (e) {
-          console.error(e);
-          toast('An error occurred...', {
-            description: 'Please wait if reservation created or try again later',
-            icon: <CircleX />,
-          });
-        } finally {
-          setLoading(false);
-          setOpen(false);
+            toast('Success !', {
+              description: 'Reservation created. A confirmation mail has been sent',
+              icon: <CircleCheckBig />,
+            });
+          } catch (e) {
+            console.error(e);
+            toast('An error occurred...', {
+              description: 'Please wait if reservation created or try again later',
+              icon: <CircleX />,
+            });
+          } finally {
+            setLoading(false);
+            redirect('/dashboard');
+          }
         }
-
-        return;
       }
-    }
-    toast('An error occurred...', {
-      description: 'Please select a valid date',
-      icon: <CircleX />,
-    });
-  }, [selectedRange, user, sendConfirmationMail]);
+      toast('An error occurred...', {
+        description: 'Please select a valid date',
+        icon: <CircleX />,
+      });
+    },
+    [user, sendConfirmationMail]
+  );
+
+  if (user.role === 'ADMIN') return;
+
+  return (
+    <SelectDateRangeReservationDialog user={user} loading={loading} callback={createReservation} buttonTitle="Book a course" />
+  );
+}
+
+type CreateReservationDialogProps = {
+  buttonTitle: string;
+  user: UserType;
+  loading: boolean;
+  callback: (date?: Date) => void;
+  type?: 'create' | 'update';
+};
+
+export function SelectDateRangeReservationDialog({ buttonTitle, user, loading, callback, type }: CreateReservationDialogProps) {
+  const [date, setDate] = useState<Date>(new Date());
+  const [dateRanges, setDateRanges] = useState<Date[] | undefined>();
+  const [selectedRange, setSelectedRange] = useState<Date | undefined>();
+  const [open, setOpen] = useState<boolean>(false);
 
   function getAvailableHours(startDate: Date, endDate: Date, lessons: { startDate: Date; endDate: Date }[]) {
     const hours: Date[] = [];
@@ -128,7 +152,12 @@ export function CreateReservation({ user }: CreateReservationProps) {
     while (isBefore(current, endDate)) {
       const nextHour = addHours(current, 1);
 
-      const isInLesson = lessons.some((lesson) => isWithinInterval(current, { start: lesson.startDate, end: lesson.endDate }));
+      const isInLesson = lessons.some((lesson) =>
+        isWithinInterval(current, {
+          start: lesson.startDate,
+          end: lesson.endDate,
+        })
+      );
 
       if (!isInLesson) {
         hours.push(new Date(current));
@@ -171,14 +200,12 @@ export function CreateReservation({ user }: CreateReservationProps) {
     );
   }, [date]);
 
-  if (user.role === 'ADMIN') return;
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button onClick={() => setOpen(true)}>
           <CalendarIcon />
-          Book a lesson
+          {buttonTitle}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -194,7 +221,7 @@ export function CreateReservation({ user }: CreateReservationProps) {
           <div className="w-full grid gap-4">
             <DateRangeSelect onSelect={setSelectedRange} ranges={dateRanges} />
           </div>
-          {(user.credit ?? 0) < 1 && (
+          {(user.credit ?? 0) < 1 && type !== 'update' && (
             <div className="flex justify-center">
               <TypographySmall>
                 <div className="text-red-700">You do not have sufficient credit</div>
@@ -203,7 +230,10 @@ export function CreateReservation({ user }: CreateReservationProps) {
           )}
         </div>
         <DialogFooter>
-          <Button onClick={createReservation} disabled={!selectedRange || loading || (user.credit ?? 0) < 1}>
+          <Button
+            onClick={() => callback(selectedRange)}
+            disabled={!selectedRange || loading || ((user.credit ?? 0) < 1 && type !== 'update')}
+          >
             {loading ? (
               <div className="flex items-center">
                 <Loader className="animate-spin mr-2" />

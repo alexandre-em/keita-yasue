@@ -12,6 +12,7 @@ export class ReservationsService {
       relationLoadStrategy: 'join',
       include: {
         author: true,
+        update: true,
       },
       where: {
         id,
@@ -98,10 +99,31 @@ export class ReservationsService {
   }
 
   updateOne(id: string, data: Partial<Omit<ReservationType, 'author'>>) {
+    const newData = {
+      ...data,
+      reservationHistoriesId: data.update ? data.update : undefined,
+    };
+
+    delete newData.update;
+
     return prisma.reservation.update({
-      data,
+      data: newData as Partial<Omit<ReservationType, 'author' | 'update'>>,
       where: {
         id,
+      },
+    });
+  }
+
+  createReservationHistory(data: ReservationHistoryType) {
+    return prisma.reservationHistories.create({
+      data: {
+        authorId: data.author! as string,
+        oldEndDate: new Date(data.oldEndDate),
+        oldStartDate: new Date(data.oldStartDate),
+        newStartDate: new Date(data.newStartDate),
+        newEndDate: new Date(data.newEndDate),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     });
   }

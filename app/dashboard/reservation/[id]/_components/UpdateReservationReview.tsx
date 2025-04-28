@@ -1,5 +1,5 @@
 'use client';
-import { CircleCheckBig, CircleX, Loader } from 'lucide-react';
+import { CircleCheckBig, CircleX, Loader, NotepadText } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -57,7 +57,10 @@ export default function UpdateReservationReview({ id, review }: UpdateReservatio
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-5 my-1">Update review</Button>
+        <Button className="mr-5 my-1">
+          <NotepadText />
+          Update review
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
