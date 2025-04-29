@@ -33,6 +33,7 @@ export default async function AdminDashboard({ user }: AdminDashboardType) {
   );
   const reservationDone = reservations.data.filter((reservation) => reservation.status === 'DONE');
   const reservationToValidate = reservations.data.filter((reservation) => reservation.status === 'TO_VALIDATE');
+  const pendingReservation = reservations.data.filter((reservation) => reservation.status === 'PENDING');
 
   const highlights = [
     {
@@ -71,20 +72,27 @@ export default async function AdminDashboard({ user }: AdminDashboardType) {
         ))}
       </div>
 
-      <div className="flex flex-wrap">
-        <div className="min-w-[150px] max-w-[500px] text-primary m-5">
+      {pendingReservation.length > 0 && (
+        <div className="text-primary m-5">
+          <TypographyH3>⚠️ Updated lesson time to validate</TypographyH3>
+          <ReservationList data={pendingReservation} user={user} />
+        </div>
+      )}
+
+      <div className="flex flex-wrap justify-around">
+        <div className="flex-1/2 min-w-[150px] max-w-[500px] text-primary m-5">
           <TypographyH3>⚠️ Transaction to validate</TypographyH3>
           <TransactionsList data={pendingTransactions.data} user={user} />
         </div>
-        <div className="min-w-[150px] max-w-[500px] text-primary m-5">
+        <div className="flex-1/2 min-w-[150px] max-w-[500px] text-primary m-5">
           <TypographyH3>⚠️ Latest booking to validate</TypographyH3>
           <ReservationList data={reservationToValidate} user={user} />
         </div>
-        <div className="min-w-[150px] max-w-[500px] text-primary m-5">
+        <div className="flex-1/2 min-w-[150px] max-w-[500px] text-primary m-5">
           <TypographyH3>📅 Next lesssons</TypographyH3>
           <ReservationList data={reservationSuccess} user={user} />
         </div>
-        <div className="min-w-[150px] max-w-[500px] text-primary m-5">
+        <div className="flex-1/2 min-w-[150px] max-w-[500px] text-primary m-5">
           <TypographyH3>🆕 Users registered the last 30 days</TypographyH3>
           <UserList data={latestRegisteredUsers} />
         </div>

@@ -34,6 +34,7 @@ export default async function UserDashboard() {
   const lastLesson = doneLessons.length > 0 ? doneLessons[0] : null;
 
   const validatedLessons = reservations.data.filter((res) => res.status === 'VALIDATED' && isBefore(new Date(), res.startDate));
+  const pendingLessons = reservations.data.filter((res) => res.status === 'PENDING');
   const nextLesson = validatedLessons.length > 0 ? validatedLessons[0] : null;
 
   return (
@@ -113,7 +114,19 @@ export default async function UserDashboard() {
           </Card>
         </>
       )}
-      <div className="text-primary my-10">
+      <div className="h-10" />
+      {pendingLessons.length > 0 && (
+        <div className="text-primary">
+          <div className="flex justify-between">
+            <TypographyH3> 🕚 Time updated lessons to validated</TypographyH3>
+            <Link href="/dashboard/reservation">
+              <Button variant="outline">View all</Button>
+            </Link>
+          </div>
+          <ReservationList user={user} data={pendingLessons.filter((_, i) => i !== 5)} />
+        </div>
+      )}
+      <div className="text-primary my-5">
         <div className="flex justify-between">
           <TypographyH3>Lessons done</TypographyH3>
           <Link href="/dashboard/reservation">
