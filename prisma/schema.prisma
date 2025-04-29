@@ -12,43 +12,60 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
   extensions = [pgcrypto]
 }
 
 model User {
-  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name            String
-  email           String        @unique
-  emailVerifiedAt DateTime?     @map("email_verified_at")
-  image           String?
-  role            Role          @default(USER)
-  googleId        String?       @unique @map("google_id")
-  createdAt       DateTime      @default(now()) @map("created_at")
-  deletedAt       DateTime?     @map("deleted_at")
-  updatedAt       DateTime?     @map("updated_at")
-  Reservation     Reservation[]
-  credit          Int           @default(0)
-  timezone        String?
-  Transaction     Transaction[]
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String
+  email                String                 @unique
+  emailVerifiedAt      DateTime?              @map("email_verified_at")
+  image                String?
+  role                 Role                   @default(USER)
+  googleId             String?                @unique @map("google_id")
+  createdAt            DateTime               @default(now()) @map("created_at")
+  deletedAt            DateTime?              @map("deleted_at")
+  updatedAt            DateTime?              @map("updated_at")
+  credit               Int                    @default(0)
+  timezone             String?
+  Reservation          Reservation[]
+  Transaction          Transaction[]
+  ReservationHistories ReservationHistories[]
 
   @@map("users")
 }
 
 model Reservation {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  status        Status   @default(IDLE)
-  startDate     DateTime @map("start_date")
-  endDate       DateTime @map("end_date")
-  meeting_link  String?
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @map("updated_at")
-  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  authorId      String   @map("author_id") @db.Uuid
-  studentReview String?  @map("student_review")
-  courseReview  String?  @map("course_review")
+  id                     String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status                 Status                @default(IDLE)
+  startDate              DateTime              @map("start_date")
+  endDate                DateTime              @map("end_date")
+  meeting_link           String?
+  createdAt              DateTime              @default(now()) @map("created_at")
+  updatedAt              DateTime              @map("updated_at")
+  authorId               String                @map("author_id") @db.Uuid
+  studentReview          String?               @map("student_review")
+  courseReview           String?               @map("course_review")
+  author                 User                  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  update                 ReservationHistories? @relation(fields: [reservationHistoriesId], references: [id])
+  reservationHistoriesId String?               @unique @map("reservation_histories_id") @db.Uuid
 
   @@map("reservations")
+}
+
+model ReservationHistories {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  oldStartDate  DateTime     @map("old_start_date")
+  oldEndDate    DateTime     @map("old_end_date")
+  newStartDate  DateTime     @map("new_start_date")
+  newEndDate    DateTime     @map("new_end_date")
+  author        User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId      String       @map("author_id") @db.Uuid
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @map("updated_at")
+  reservation   Reservation? 
+
+  @@map("reservation_histories")
 }
 
 model Transaction {
@@ -60,8 +77,8 @@ model Transaction {
   currency    String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @map("updated_at")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      String   @map("user_id") @db.Uuid
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("transactions")
 }

@@ -1,20 +1,31 @@
-'use client';
-import { Loader } from 'lucide-react';
-import Link from 'next/link';
+"use client";
+import { Loader } from "lucide-react";
+import Link from "next/link";
 
-import { TypographyMuted } from '@/components/typography';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { statusColor } from '@/constants';
+import { TypographyMuted } from "@/components/typography";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { statusColor } from "@/constants";
 
 type ReservationListProps = {
-  data: ReservationType[];
+  data: Omit<ReservationType, "update">[];
   user: UserType;
   loading?: boolean;
 };
 
-export default function ReservationList({ data, user, loading }: ReservationListProps) {
+export default function ReservationList({
+  data,
+  user,
+  loading,
+}: ReservationListProps) {
   if (loading === true)
     return (
       <>
@@ -52,34 +63,56 @@ export default function ReservationList({ data, user, loading }: ReservationList
           {data?.map((reserv) => {
             const startDate = new Date(reserv.startDate);
             const endDate = new Date(reserv.endDate);
-            const timeZone = user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const timeZone =
+              user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 
             return (
-              <Link legacyBehavior key={`reserv-n${reserv.id}`} href={`/dashboard/reservation/${reserv.id}`}>
+              <Link
+                legacyBehavior
+                key={`reserv-n${reserv.id}`}
+                href={`/dashboard/reservation/${reserv.id}`}
+              >
                 <TableRow className="cursor-pointer">
-                  <TableCell>{reserv.id?.split('-')[0]}</TableCell>
+                  <TableCell>{reserv.id?.split("-")[0]}</TableCell>
                   <TableCell className="font-medium flex flex-wrap items-center">
                     <Avatar className="mr-2 hidden sm:block">
-                      <AvatarImage src={(reserv.author as UserType).image ?? undefined} />
-                      <AvatarFallback>{(reserv.author as UserType).name.charAt(0)}</AvatarFallback>
+                      <AvatarImage
+                        src={(reserv.author as UserType).image ?? undefined}
+                      />
+                      <AvatarFallback>
+                        {(reserv.author as UserType).name.charAt(0)}
+                      </AvatarFallback>
                     </Avatar>
                     {(reserv.author as UserType).name}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={statusColor[reserv.status]}>{reserv.status}</Badge>
+                    <Badge variant={statusColor[reserv.status]}>
+                      {reserv.status}
+                    </Badge>
                   </TableCell>
                   <TableCell>
-                    {startDate.toLocaleString('en-us', {
-                      weekday: 'short',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
+                    {startDate.toLocaleString("en-us", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
                       timeZone,
                     })}
                   </TableCell>
                   <TableCell>
-                    {startDate.toLocaleString('en-us', { hour: 'numeric', hour12: true, minute: 'numeric', timeZone })} -{' '}
-                    {endDate.toLocaleString('en-us', { hour: 'numeric', hour12: true, minute: 'numeric', timeZone })}
+                    {startDate.toLocaleString("en-us", {
+                      hour: "numeric",
+                      hour12: true,
+                      minute: "numeric",
+                      timeZone,
+                    })}{" "}
+                    -{" "}
+                    {endDate.toLocaleString("en-us", {
+                      hour: "numeric",
+                      hour12: true,
+                      minute: "numeric",
+                      timeZone,
+                    })}
                   </TableCell>
                 </TableRow>
               </Link>

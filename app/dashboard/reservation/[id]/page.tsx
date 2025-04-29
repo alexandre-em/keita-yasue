@@ -1,4 +1,4 @@
-import { ChevronRight, Loader } from 'lucide-react';
+import { ChevronRight, CircleAlert, Loader } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
@@ -27,12 +27,17 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import MeetingVideo from '@/components/MeetingVideo';
 import { isBefore } from 'date-fns';
+import UpdateReservationTime from './_components/UpdateReservationTime';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import AlertButtonGroup from './_components/AlertButtonGroup';
 
 export default async function ReservationId({ params }: IdParamsType) {
   const { id } = await params;
   const user = await getUserDetail();
 
   const reservation = await ReservationServiceIns.getById(id);
+  const author = reservation.author as UserType;
+  const update = reservation.update as ReservationHistoryType;
 
   const statusArray =
     reservation?.status === 'CANCELLED' || reservation?.status === 'TO_CANCEL' ? statusCancellationLevel : statusValidationLevel;
@@ -56,18 +61,69 @@ export default async function ReservationId({ params }: IdParamsType) {
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex flex-wrap items-center mt-2">
           <Avatar>
-            <AvatarImage src={reservation.author.image ?? undefined} />
-            <AvatarFallback>{reservation.author.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={author.image ?? undefined} />
+
+            <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
           </Avatar>
 
           <div className="ml-2">
-            <TypographySmall>{reservation.author.name}</TypographySmall>
+            <TypographySmall>{author.name}</TypographySmall>
           </div>
         </div>
-        {(user.role !== 'ADMIN' || user.id !== reservation.author.id) && (
-          <ChatDestButton user={user} dest={user.role === 'ADMIN' ? reservation.author : admin} />
+        {(user.role !== 'ADMIN' || user.id !== author.id) && (
+          <ChatDestButton user={user} dest={user.role === 'ADMIN' ? author : admin} />
         )}
       </div>
+
+      {reservation.status === 'PENDING' && (
+        <Alert className="mt-5 flex justify-between" variant="info">
+          <div className="flex">
+            <CircleAlert className="h-4 w-4 mr-2 mt-1" />
+            <div className="flex flex-col w-fit">
+              <AlertTitle>The lesson&apos;s time has been updated</AlertTitle>
+              <AlertDescription>Please confirm the new time to validated the reservation</AlertDescription>
+              <AlertDescription className="flex">
+                <div className="line-through">
+                  {update?.oldStartDate.toLocaleString('en-us', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZone: user.timezone ?? 'UTC',
+                  })}{' '}
+                  to{' '}
+                  {update?.oldEndDate.toLocaleString('en-us', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZone: user.timezone ?? 'UTC',
+                  })}
+                </div>
+                <div className="font-bold">
+                  &gt;{' '}
+                  {reservation.startDate.toLocaleString('en-us', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZone: user.timezone ?? 'UTC',
+                  })}{' '}
+                  to{' '}
+                  {reservation.endDate.toLocaleString('en-us', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    timeZone: user.timezone ?? 'UTC',
+                  })}
+                </div>
+              </AlertDescription>
+            </div>
+          </div>
+          <AlertButtonGroup reservation={reservation} user={user} id={id} />
+        </Alert>
+      )}
+
+      <MeetingVideo reservation={reservation} user={user} />
 
       {/* Reservation detail */}
       <div className="flex flex-wrap w-full">
@@ -133,10 +189,13 @@ export default async function ReservationId({ params }: IdParamsType) {
                 <>
                   <UpdateReservationStatus id={id} reservation={reservation} user={user} />
                   {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
-                    <UpdateReservationReview id={id} review={reservation.studentReview} />
+                    <UpdateReservationReview id={id} review={reservation.studentReview ?? null} />
                   )}
                 </>
               )}
+              <div className="mx-5 my-1">
+                <UpdateReservationTime id={id} reservation={reservation} user={user} />
+              </div>
             </div>
           </CardFooter>
         </Card>
@@ -154,8 +213,6 @@ export default async function ReservationId({ params }: IdParamsType) {
           </Card>
         )}
       </div>
-
-      <MeetingVideo reservation={reservation} user={user} />
 
       {/* Reservation review */}
       {reservation.studentReview && (

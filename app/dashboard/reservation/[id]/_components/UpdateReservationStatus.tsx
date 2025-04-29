@@ -1,5 +1,5 @@
 'use client';
-import { CircleCheckBig, CircleX, Loader } from 'lucide-react';
+import { BookCheck, CircleCheckBig, CircleX, Loader } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ import { sendValidationReservationMail } from '@/actions/mail';
 
 type UpdateReservationStatusProps = {
   id: string;
-  reservation: ReservationType;
+  reservation: Omit<ReservationType, 'update'>;
   user: UserType;
 };
 
@@ -93,7 +93,10 @@ export default function UpdateReservationStatus({ id, reservation, user }: Updat
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-5 my-1">Update status</Button>
+        <Button className="mr-5 my-1">
+          <BookCheck />
+          Update status
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

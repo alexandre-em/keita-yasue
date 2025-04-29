@@ -34,13 +34,24 @@ type ReservationType = {
   startDate: Date;
   endDate: Date;
   author: UserType | string;
-  meetingLink?: string;
+  meeting_link?: string | null;
   studentReview?: string | null;
   courseReview?: string | null;
   status: StatusType;
+  update: ReservationHistoryType | string | null;
   createdAt: Date;
   updatedAt?: Date;
-  deletedAt?: Date;
+};
+
+type ReservationHistoryType = {
+  id?: string;
+  newStartDate: Date;
+  newEndDate: Date;
+  oldStartDate: Date;
+  oldEndDate: Date;
+  author: UserType | string;
+  createdAt: Date;
+  updatedAt?: Date;
 };
 
 type PackageType =

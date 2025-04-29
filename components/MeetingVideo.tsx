@@ -8,7 +8,7 @@ import { generate } from '@/actions/jitsy';
 
 type MeetingVideoProps = {
   user: UserType;
-  reservation: ReservationType;
+  reservation: Omit<ReservationType, 'update'>;
 };
 
 export default function MeetingVideo(props: MeetingVideoProps) {
