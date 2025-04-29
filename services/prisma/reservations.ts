@@ -7,8 +7,8 @@ export class ReservationsService {
     this.collection = 'reservations';
   }
 
-  getById(id: string) {
-    return prisma.reservation.findFirst({
+  async getById(id: string) {
+    const res = await prisma.reservation.findFirst({
       relationLoadStrategy: 'join',
       include: {
         author: true,
@@ -18,6 +18,11 @@ export class ReservationsService {
         id,
       },
     });
+
+    return {
+      ...res,
+      update: res?.update ? { ...res.update, author: res.update.authorId } : null,
+    } as ReservationType;
   }
 
   getByField(key: string, value: string) {

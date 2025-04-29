@@ -34,7 +34,7 @@ type ReservationType = {
   startDate: Date;
   endDate: Date;
   author: UserType | string;
-  meetingLink?: string;
+  meeting_link?: string | null;
   studentReview?: string | null;
   courseReview?: string | null;
   status: StatusType;
