@@ -75,7 +75,7 @@ export default async function ReservationId({ params }: IdParamsType) {
         )}
       </div>
 
-      {reservation.status === 'PENDING' && (
+      {reservation.status === 'PENDING' && user.id !== (reservation.update as ReservationHistoryType)?.author && (
         <Alert className="mt-5 flex justify-between" variant="info">
           <div className="flex">
             <CircleAlert className="h-4 w-4 mr-2 mt-1" />
@@ -193,9 +193,11 @@ export default async function ReservationId({ params }: IdParamsType) {
                   )}
                 </>
               )}
-              <div className="mx-5 my-1">
-                <UpdateReservationTime id={id} reservation={reservation} user={user} />
-              </div>
+              {isBefore(new Date(), reservation.startDate) && (
+                <div className="mx-5 my-1">
+                  <UpdateReservationTime id={id} reservation={reservation} user={user} />
+                </div>
+              )}
             </div>
           </CardFooter>
         </Card>
