@@ -4,6 +4,7 @@ import React from 'react';
 
 import {
   TypographyH1,
+  TypographyH3,
   TypographyInlineCode,
   TypographyLarge,
   TypographyLead,
@@ -19,7 +20,6 @@ import { getUserDetail } from '@/constants/cookies';
 import { ReservationServiceIns } from '@/services';
 
 import CancelReservationDialog from './_components/CancelReservationDialog';
-import UpdateReservationReview from './_components/UpdateReservationReview';
 import UpdateReservationStatus from './_components/UpdateReservationStatus';
 import ChatDestButton from '../../_components/chat/ChatDestButton';
 import VideoConf from '@/components/svg/VideoConf';
@@ -30,6 +30,8 @@ import { isBefore } from 'date-fns';
 import UpdateReservationTime from './_components/UpdateReservationTime';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import AlertButtonGroup from './_components/AlertButtonGroup';
+import MarkdownEditor from '@/components/Editor';
+import MarkdownViewer from '@/components/Viewer';
 
 export default async function ReservationId({ params }: IdParamsType) {
   const { id } = await params;
@@ -130,7 +132,7 @@ export default async function ReservationId({ params }: IdParamsType) {
         <Card className="my-5 grow">
           <CardHeader>
             <CardTitle>Reservation&apos;s details</CardTitle>
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap mt-5">
               {statusArray.map((s, i) => (
                 <div key={s} className="flex">
                   <Badge
@@ -185,14 +187,7 @@ export default async function ReservationId({ params }: IdParamsType) {
                 )}
 
               {/* Updates buttons for admin */}
-              {user.role === 'ADMIN' && (
-                <>
-                  <UpdateReservationStatus id={id} reservation={reservation} user={user} />
-                  {(reservation.status === 'DONE' || reservation.status === 'VALIDATED') && (
-                    <UpdateReservationReview id={id} review={reservation.studentReview ?? null} />
-                  )}
-                </>
-              )}
+              {user.role === 'ADMIN' && <UpdateReservationStatus id={id} reservation={reservation} user={user} />}
               {isBefore(new Date(), reservation.startDate) && (
                 <div className="mx-5 my-1">
                   <UpdateReservationTime id={id} reservation={reservation} user={user} />
@@ -202,7 +197,7 @@ export default async function ReservationId({ params }: IdParamsType) {
           </CardFooter>
         </Card>
         {reservation.meeting_link && (
-          <Card className="m-5">
+          <Card className="my-5 ml-5">
             <CardContent>
               <CardTitle>🧑‍💻 Zoom Meet</CardTitle>
               <VideoConf width={200} height={200} />
@@ -217,17 +212,23 @@ export default async function ReservationId({ params }: IdParamsType) {
       </div>
 
       {/* Reservation review */}
-      {reservation.studentReview && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="mb-2">📝 Resume of the lesson</CardTitle>
-            {reservation.studentReview.split('\\n').map((review, i) => (
-              <p key={`${review}-${i}`} className="text-muted-foreground text-sm leading-none italic [&:not(:first-child)]:mt-2">
-                {review}
-              </p>
-            ))}
-          </CardHeader>
-        </Card>
+
+      <TypographyH3>Review of the lesson</TypographyH3>
+      <div className="h-[1rem]" />
+
+      {user.role === 'USER' && reservation.studentReview && <MarkdownViewer content={JSON.parse(reservation.studentReview)} />}
+
+      {user.role === 'ADMIN' && reservation.status === 'DONE' && (
+        <div className="w-full h-[400px] mb-20">
+          <MarkdownEditor
+            id={id}
+            bodyKey="studentReview"
+            submitPath="/api/reservations/update"
+            content={
+              reservation.studentReview && reservation.studentReview !== '' ? JSON.parse(reservation.studentReview) : '# Title\n'
+            }
+          />
+        </div>
       )}
     </div>
   );

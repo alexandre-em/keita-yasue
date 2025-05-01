@@ -36,7 +36,7 @@ export default function UserList({ data, loading }: UserListProps) {
     );
 
   return (
-    <div className="mt-2 rounded-md border bg-white">
+    <div className="mt-2 rounded-sm border bg-white">
       <Table>
         <TableHeader>
           <TableRow>

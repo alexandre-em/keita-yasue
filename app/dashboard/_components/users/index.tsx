@@ -1,17 +1,17 @@
-import { TypographyBlockquote, TypographyH1, TypographyH3 } from '@/components/typography';
+import { TypographyH1, TypographyH3 } from '@/components/typography';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import CreateReservation from '../CreateReservation';
 import { getUserDetail } from '@/constants/cookies';
 import { ReservationServiceIns } from '@/services';
 import NumberCard from '@/components/NumberCard';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ReservationList from '../ReservationList';
 import Link from 'next/link';
 import { isBefore } from 'date-fns';
-import { admin } from '@/constants/admin';
 import AddCreditCard from '../AddCredit';
+import MarkdownViewer from '@/components/Viewer';
 
 export default async function UserDashboard() {
   const user = await getUserDetail();
@@ -36,6 +36,8 @@ export default async function UserDashboard() {
   const validatedLessons = reservations.data.filter((res) => res.status === 'VALIDATED' && isBefore(new Date(), res.startDate));
   const pendingLessons = reservations.data.filter((res) => res.status === 'PENDING');
   const nextLesson = validatedLessons.length > 0 ? validatedLessons[0] : null;
+
+  console.log();
 
   return (
     <div className="flex flex-col m-5 mt-0 w-full overflow-x-hidden">
@@ -93,25 +95,12 @@ export default async function UserDashboard() {
             </Link>
           </div>
           <div className="h-[0.5rem]" />
-          <Card>
-            <CardHeader>
-              <CardTitle>{admin.name} :</CardTitle>
-              <TypographyBlockquote>
-                {lastLesson.studentReview
-                  .split('\\n')
-                  .filter((_, i) => i < 5)
-                  .map((review, i) => (
-                    <p
-                      key={`${review}-${i}`}
-                      className="text-muted-foreground text-sm leading-none italic [&:not(:first-child)]:mt-2"
-                    >
-                      {review}
-                    </p>
-                  ))}
-                ...
-              </TypographyBlockquote>
-            </CardHeader>
-          </Card>
+          <MarkdownViewer
+            content={JSON.parse(lastLesson.studentReview)
+              .split('\n')
+              .filter((_: string, i: number) => i < 5)
+              .join('\n')}
+          />
         </>
       )}
       <div className="h-10" />

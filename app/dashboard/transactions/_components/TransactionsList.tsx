@@ -14,7 +14,7 @@ type TransactionsListProps = {
 
 export default function TransactionsList({ data, user }: TransactionsListProps) {
   return (
-    <div className="mt-2 rounded-md border bg-white">
+    <div className="mt-2 rounded-sm border bg-white">
       <Table>
         <TableHeader>
           <TableRow>
