@@ -73,7 +73,8 @@ export function CreditDialog({ user }: CreditDialogProps) {
           `${user.name} has payed for ${selectedPlan.packageType} package (${(selectedPlan.amount ?? 0) / 100} ${selectedPlan.currency}). Please check your revolut account and validate the transaction, so ${user.name} can have his credits to be able to book a lesson.`
         );
 
-        window.open('https://revolut.me/keitadzx', '_blank')!.focus();
+        // window.open('https://revolut.me/keitadzx');
+        window.location.href = "https://revolut.me/keitadzx";
 
         toast('Success !', {
           description: 'Reservation created. A confirmation mail has been sent',

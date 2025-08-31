@@ -39,20 +39,20 @@ export const prices = [
     title: '4 hours lessons',
     price: {
       ja: {
-        title: '¥11,000',
-        amount: 1100000,
+        title: '¥11,500',
+        amount: 1150000,
         currency: 'JPY',
         packageType: 'FOUR_HOURS_PACK',
       },
       en: {
-        title: '£70',
-        amount: 7000,
+        title: '£75',
+        amount: 7500,
         currency: 'GBP',
         packageType: 'FOUR_HOURS_PACK',
       },
       eu: {
-        title: '90€',
-        amount: 9000,
+        title: '95€',
+        amount: 9500,
         currency: 'EUR',
         packageType: 'FOUR_HOURS_PACK',
       },
@@ -69,20 +69,20 @@ export const prices = [
     title: '12 hours lessons',
     price: {
       ja: {
-        title: '¥30,000',
-        amount: 3000000,
+        title: '¥33,000',
+        amount: 3300000,
         currency: 'JPY',
         packageType: 'TWELVE_HOURS_PACK',
       },
       en: {
-        title: '£200',
-        amount: 20000,
+        title: '£220',
+        amount: 22000,
         currency: 'GBP',
         packageType: 'TWELVE_HOURS_PACK',
       },
       eu: {
-        title: '250€',
-        amount: 25000,
+        title: '270€',
+        amount: 27000,
         currency: 'EUR',
         packageType: 'TWELVE_HOURS_PACK',
       },
