@@ -3,7 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import CreateReservation from '../CreateReservation';
 import { getUserDetail } from '@/constants/cookies';
-import { ReservationServiceIns, UserServiceIns } from '@/services';
+import { ReservationServiceIns } from '@/services';
 import NumberCard from '@/components/NumberCard';
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,6 @@ import MarkdownViewer from '@/components/Viewer';
 
 export default async function UserDashboard() {
   const user = await getUserDetail();
-  const userDetail = await UserServiceIns.getById(user.id);
   const reservations = await ReservationServiceIns.getByUser(user.id, { limit: 10000, orderByQuery: 'desc', role: user.role });
 
   const highlights = [
@@ -37,6 +36,8 @@ export default async function UserDashboard() {
   const validatedLessons = reservations.data.filter((res) => res.status === 'VALIDATED' && isBefore(new Date(), res.startDate));
   const pendingLessons = reservations.data.filter((res) => res.status === 'PENDING');
   const nextLesson = validatedLessons.length > 0 ? validatedLessons[0] : null;
+
+  console.log();
 
   return (
     <div className="flex flex-col m-5 mt-0 w-full overflow-x-hidden">
@@ -78,7 +79,7 @@ export default async function UserDashboard() {
         )}
         <AddCreditCard user={user} />
         <Separator orientation="vertical" className="mx-1" />
-        <CreateReservation user={userDetail!} />
+        <CreateReservation user={user} />
         {highlights.map((highlight) => (
           <NumberCard data={highlight} key={JSON.stringify(highlight)} />
         ))}
