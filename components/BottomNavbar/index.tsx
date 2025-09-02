@@ -10,7 +10,7 @@ export default async function BottomNavBar() {
 
   return (
     <div className="fixed bottom-0 left-0 z-40 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600 md:invisible block">
-      <div className="grid h-full max-w-lg grid-cols-4 mx-auto text-xs">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto text-xs">
         {menu.map((item, i) => i < 4 && <BottomNavBarItem {...item} key={`bottom-${item.name}`} />)}
         <LogoutButton />
       </div>
