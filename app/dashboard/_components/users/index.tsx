@@ -76,7 +76,7 @@ export default async function UserDashboard() {
             </CardFooter>
           </Card>
         )}
-        <AddCreditCard user={user} />
+        <AddCreditCard user={userDetail!} />
         <Separator orientation="vertical" className="mx-1" />
         <CreateReservation user={userDetail!} />
         {highlights.map((highlight) => (
